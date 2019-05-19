@@ -115,5 +115,7 @@ int						ft_atoi_base(char *str, int base, int sign);
 int						ft_get_number(char *str);
 int						ft_is_whitespace(char c);
 void					ft_strtolower(char *str);
+char					**ft_strsplitf(char const *s, int (*f)(char));
+void					free_2d_char_d(char ***mas);
 
 #endif

@@ -1,6 +1,7 @@
 #include <fcntl.h>
 #include "fdf.h"
 #include "libft.h"
+#include "validator.h"
 
 int		get_file_descriptor(char *file)
 {
@@ -14,12 +15,10 @@ int		get_file_descriptor(char *file)
 	return (fd);
 }
 
+void	map_validation(char *file, t_map *map)
+{
+	int		fd;
 
-
-//void	map_validation(char *file, t_map *map)
-//{
-//	int		fd;
-//
-//	fd = get_file_descriptor(file);
-//
-//}
+	fd = get_file_descriptor(file);
+	read_fdf_map(fd, map);
+}

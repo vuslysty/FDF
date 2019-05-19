@@ -4,7 +4,7 @@ project(FDF C)
 set(CMAKE_C_STANDARD 99)
 add_subdirectory(./libft)
 
-add_executable(FDF srcs/main.c includes/fdf.h srcs/drawLine.c srcs/map_validator/validation.c)
+add_executable(FDF srcs/main.c includes/fdf.h srcs/drawLine.c srcs/map_validator/validation.c srcs/map_validator/is_delimiter.c includes/validator.h srcs/map_validator/read_fdf_map.c)
 target_include_directories(FDF PRIVATE ./includes ./libft/includes /usr/local/include)
 
 target_compile_options(FDF PRIVATE -Wall -Wextra -Werror)

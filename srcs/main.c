@@ -1,3 +1,4 @@
+#include "validator.h"
 #include "libft.h"
 #include "mlx.h" // man /usr/share/man/man3/
 #include "fdf.h"
@@ -37,7 +38,17 @@ int main()
 //	draw_line(&a, &b, &fdf, 234234);
 //	mlx_loop(fdf.mlx_ptr);
 
-	ft_printf("%i\n", ft_get_number(NULL));
+	t_map	map;
+
+	map_validation("mars.fdf", &map);
+	int i = -1, j;
+	while (++i < map.rows)
+	{
+		j = -1;
+		while (++j < map.cols)
+			ft_printf("%i ", map.map[i][j]);
+		ft_printf("\n");
+	}
 
 	return (0);
 }
