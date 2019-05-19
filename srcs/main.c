@@ -1,5 +1,5 @@
 #include "libft.h"
-#include "mlx.h"
+#include "mlx.h" // man /usr/share/man/man3/
 #include "fdf.h"
 
 int		key_hook(int kcode, void *data)
@@ -21,17 +21,23 @@ int		key_hook(int kcode, void *data)
 
 int main()
 {
-	t_fdf	fdf;
+//	t_fdf	fdf;
+//
+//	fdf.windows_size.x = 2000;
+//	fdf.windows_size.y = 1200;
+//
+//	t_point a = {100, 100};
+//	t_point b = {1000, 1200};
+//
+//	fdf.mlx_ptr = mlx_init();
+//	fdf.win_ptr = mlx_new_window(fdf.mlx_ptr, fdf.windows_size.x,
+//			fdf.windows_size.y, "mlx 42");
+////	mlx_pixel_put(fdf.mlx_ptr, fdf.win_ptr, 555, 555, 624235);
+////	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
+//	draw_line(&a, &b, &fdf, 234234);
+//	mlx_loop(fdf.mlx_ptr);
 
-	fdf.windows_size.x = 2000;
-	fdf.windows_size.y = 1200;
-
-	fdf.mlx_ptr = mlx_init();
-	fdf.win_ptr = mlx_new_window(fdf.mlx_ptr, fdf.windows_size.x,
-			fdf.windows_size.y, "mlx 42");
-	mlx_pixel_put(fdf.mlx_ptr, fdf.win_ptr, 555, 555, 624235);
-	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
-	mlx_loop(fdf.mlx_ptr);
+	ft_printf("%i\n", ft_get_number(NULL));
 
 	return (0);
 }

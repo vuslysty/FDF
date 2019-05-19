@@ -15,7 +15,7 @@
 # define MODE_FLAGS 7
 # define CONVERSIONS "cspdiouxXfFeEgGb%"
 # define FLAGS "+- #0"
-# define ABS(n) ((n) > 0) ? (n) : (n * -1);
+# define ABS(n) ((n) > 0) ? (n) : ((n) * -1)
 # define MANTISS_LEN 64
 
 # define STD		"\033[30m"

@@ -77,6 +77,11 @@ SRCS = ./srcs/ft_atoi.c\
 		./srcs/get_next_line.c\
 		./srcs/sort_list.c\
 		./srcs/write_digit_base.c\
+		./srcs/ft_error.c\
+		./srcs/ft_atoi_base.c\
+		./srcs/ft_get_number.c\
+		./srcs/ft_is_whitespace.c\
+		./srcs/ft_strtolower.c\
 		./srcs/ft_printf/add_0_for_numstr.c\
 		./srcs/ft_printf/b_options.c\
 		./srcs/ft_printf/bigintsum_toa.c\

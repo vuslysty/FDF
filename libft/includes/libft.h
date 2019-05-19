@@ -110,5 +110,10 @@ void					ft_strreverse(char *str);
 char					*ft_strjoin_free(char *s1, char *s2, int mode);
 size_t					ft_unistrlen(unsigned char *str);
 void					ft_putmem_fd(void *mem, size_t len, int fd);
+void					ft_error(char *message);
+int						ft_atoi_base(char *str, int base, int sign);
+int						ft_get_number(char *str);
+int						ft_is_whitespace(char c);
+void					ft_strtolower(char *str);
 
 #endif

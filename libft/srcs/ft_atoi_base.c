@@ -1,40 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_atoi_base.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/26 14:07:09 by vuslysty          #+#    #+#             */
-/*   Updated: 2019/01/21 19:55:47 by vuslysty         ###   ########.fr       */
+/*   Created: 2019/05/19 18:26:55 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/05/19 18:27:00 by vuslysty         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int						ft_atoi(const char *str)
+static int				is_valid_char(const char *str, char curr,
+										int base, int *n)
 {
+	int					i;
+
+	i = 0;
+	while (str[i] != '\0' && i < base)
+	{
+		if (str[i] == curr)
+		{
+			*n = i;
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int						ft_atoi_base(char *str, int base, int sign)
+{
+	const char			*c = "0123456789abcdef";
 	unsigned long int	res;
 	int					i;
-	int					sign;
+	int					n;
 
+	if (base < 2 || base > 16)
+		return (0);
 	res = 0;
-	sign = 1;
 	i = 0;
 	while (ft_is_whitespace(str[i]))
 		i++;
-	if (str[i] == '+' || str[i] == '-')
-		if (str[i++] == '-')
-			sign = -1;
-	while (str[i] == '0')
-		i++;
-	while ((str[i] != '\0') && ft_isdigit(str[i]))
+	while ((str[i] != '\0') && is_valid_char(c, str[i], base, &n))
 	{
-		res = res * 10 + (str[i] - '0');
-		if (sign == 1 && res >= 9223372036854775807)
-			return (-1);
-		else if (sign == -1 && res > 9223372036854775807)
-			return (0);
+		res = res * base + n;
 		i++;
 	}
 	return ((int)(res * sign));
