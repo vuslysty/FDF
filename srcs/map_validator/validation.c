@@ -1,9 +1,8 @@
 #include <fcntl.h>
 #include "fdf.h"
 #include "libft.h"
-#include "validator.h"
 
-int		get_file_descriptor(char *file)
+static int		get_file_descriptor(char *file)
 {
 	int		fd;
 
@@ -15,10 +14,66 @@ int		get_file_descriptor(char *file)
 	return (fd);
 }
 
-void	map_validation(char *file, t_map *map)
+static int		get_mas_len(char **mas)
 {
+	int		i;
+
+	i = 0;
+	while (*mas++)
+		i++;
+	return (i);
+}
+
+static int		**get_map(t_list *list, t_map *map)
+{
+	int		**mas;
+	int		i;
+	int		j;
+	char	**tmp;
+
+	if (map->rows == 1 && map->cols == 0)
+		ft_error("No data input!\n");
+	if (!(mas = (int**)ft_memalloc(sizeof(int*) * map->rows)))
+		ft_error("Memory allocation error!\n");
+	i = -1;
+	while (++i < map->rows)
+	{
+		if (!(mas[i] = (int*)ft_memalloc(sizeof(int) * map->cols)))
+			ft_error("Memory allocation error!\n");
+		j = -1;
+		tmp = (char**)list->content;
+		while (++j < map->cols)
+			mas[i][j] = ft_get_number(tmp[j]);
+		list = list->next;
+	}
+	return (mas);
+}
+
+void	read_fdf_map(char *file, t_map *map)
+{
+	char	*line;
+	char	**mas;
+	t_list	*list;
 	int		fd;
 
 	fd = get_file_descriptor(file);
-	read_fdf_map(fd, map);
+	list = NULL;
+	get_next_line(fd, &line);
+	mas = ft_strsplitf(line, is_delimiter);
+	map->cols = get_mas_len(mas);
+	ft_lstadd_end(&list, ft_lstnew(mas, 0));
+	free(line);
+	while (get_next_line(fd, &line) > 0)
+	{
+		mas = ft_strsplitf(line, is_delimiter);
+		if (map->cols != get_mas_len(mas))
+			ft_error("Found wrong line length. Exiting.\n");
+		ft_lstadd_end(&list, ft_lstnew(mas, 0));
+		free(line);
+	}
+	free(line);
+	close(fd);
+	map->rows = ft_list_size(list);
+	map->map = get_map(list, map);
+	ft_lstdel(&list, del_list_content);
 }

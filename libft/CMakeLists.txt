@@ -6,7 +6,7 @@ AUX_SOURCE_DIRECTORY(./srcs LIB_SRCS)
 AUX_SOURCE_DIRECTORY(./srcs/ft_printf PF_SRCS)
 
 # create library with sourses
-add_library(LIBFT STATIC ${LIB_SRCS} ${PF_SRCS} srcs/ft_get_number.c srcs/ft_atoi_base.c srcs/ft_is_whitespace.c srcs/ft_strtolower.c srcs/ft_strsplitf.c srcs/free_2d_mas.c)
+add_library(LIBFT STATIC ${LIB_SRCS} ${PF_SRCS} srcs/ft_get_number.c srcs/ft_atoi_base.c srcs/ft_is_whitespace.c srcs/ft_strtolower.c srcs/ft_strsplitf.c)
 # Specify the foulder with headers for library (or executable)
 target_include_directories(LIBFT PRIVATE ./includes)
 # Specify compile options for library

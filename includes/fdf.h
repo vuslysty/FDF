@@ -29,5 +29,9 @@ typedef struct		s_map
 }					t_map;
 
 void	draw_line(t_point *a, t_point *b, t_fdf *fdf, int color);
+int		is_delimiter(char c);
+void	del_list_content(void *content, size_t tmp);
+void	read_fdf_map(char *file, t_map *map);
+
 
 #endif //FDF_FDF_H

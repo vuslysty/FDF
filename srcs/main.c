@@ -40,7 +40,8 @@ int main()
 
 	t_map	map;
 
-	map_validation("mars.fdf", &map);
+	read_fdf_map("mars.fdf", &map);
+
 	int i = -1, j;
 	while (++i < map.rows)
 	{
@@ -49,6 +50,6 @@ int main()
 			ft_printf("%i ", map.map[i][j]);
 		ft_printf("\n");
 	}
-
+	system("leaks -q FDF");
 	return (0);
 }
