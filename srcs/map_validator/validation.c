@@ -24,26 +24,44 @@ static int		get_mas_len(char **mas)
 	return (i);
 }
 
-static int		**get_map(t_list *list, t_map *map)
+static void		get_z_and_color(t_point *point, char *str)
 {
-	int		**mas;
+	char	**tmp;
+	int		mas_len;
+
+	tmp = ft_strsplit(str, ',');
+	mas_len = get_mas_len(tmp);
+	if (mas_len > 2)
+		ft_error("Format error!\n");
+	point->z = ft_get_number(tmp[0]);
+	point->color = (mas_len == 1) ? 0xFFFFFF : ft_get_number(tmp[1]);
+	del_list_content(tmp, 0);
+}
+
+static t_point	**get_map(t_list *list, t_map *map)
+{
+	t_point	**mas;
 	int		i;
 	int		j;
 	char	**tmp;
 
 	if (map->rows == 1 && map->cols == 0)
 		ft_error("No data input!\n");
-	if (!(mas = (int**)ft_memalloc(sizeof(int*) * map->rows)))
+	if (!(mas = (t_point**)ft_memalloc(sizeof(t_point*) * map->rows)))
 		ft_error("Memory allocation error!\n");
 	i = -1;
 	while (++i < map->rows)
 	{
-		if (!(mas[i] = (int*)ft_memalloc(sizeof(int) * map->cols)))
+		if (!(mas[i] = (t_point*)ft_memalloc(sizeof(t_point) * map->cols)))
 			ft_error("Memory allocation error!\n");
 		j = -1;
 		tmp = (char**)list->content;
 		while (++j < map->cols)
-			mas[i][j] = ft_get_number(tmp[j]);
+		{
+			get_z_and_color(&mas[i][j], tmp[j]);
+			mas[i][j].y = i * 1;
+			mas[i][j].x = j * 1;
+		}
 		list = list->next;
 	}
 	return (mas);
@@ -74,6 +92,6 @@ void	read_fdf_map(char *file, t_map *map)
 	free(line);
 	close(fd);
 	map->rows = ft_list_size(list);
-	map->map = get_map(list, map);
+	map->bas = get_map(list, map);
 	ft_lstdel(&list, del_list_content);
 }

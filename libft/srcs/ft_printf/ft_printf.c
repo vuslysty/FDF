@@ -81,6 +81,7 @@ int			ft_printf(char *str, ...)
 {
 	t_pf		pf;
 
+	ft_bzero(&pf, sizeof(pf));
 	va_start(pf.ap, str);
 	pf.fd = 1;
 	pf.i = 0;
