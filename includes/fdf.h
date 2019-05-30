@@ -17,7 +17,7 @@ typedef struct		s_point
 typedef struct		s_fdf
 {
 	struct s_map	*map;
-	struct s_point	windows_size;
+	struct s_point	w_size;
 	void			*mlx_ptr;
 	void			*win_ptr;
 }					t_fdf;
@@ -36,7 +36,7 @@ void	del_list_content(void *content, size_t tmp);
 void	read_fdf_map(char *file, t_map *map);
 int		get_color(t_point current, t_point start, t_point end, t_point delta);
 void	draw_gradient_line(t_point *a, t_point *b, t_fdf *fdf, t_point curr);
-t_point		**get_copy_base_map(t_map *map);
+t_point	**get_copy_base_map(t_map *map);
 
 
 #endif //FDF_FDF_H

@@ -4,7 +4,7 @@
 #include "fdf.h"
 #include "math.h"
 
-void	rot_x(double deg, t_map *map)
+void	rot_x(double dx, double dy, double dz, t_map *map, t_fdf *fdf)
 {
 	int x;
 	int y;
@@ -15,48 +15,104 @@ void	rot_x(double deg, t_map *map)
 		x = -1;
 		while (++x < map->rows)
 		{
-			map->rot[y][x].x = (map->bas[y][x].x);
-			map->rot[y][x].y = (map->bas[y][x].y * cos(deg) + map->bas[y][x].z * sin(deg));
-			map->rot[y][x].z = (-map->bas[y][x].y * sin(deg) + map->bas[y][x].z * cos(deg));
+
+//			map->rot[y][x].x = map->bas[y][x].x * cos(dy) +
+//					map->bas[y][x].y * sin(dx) * sin(dy) -
+//					map->bas[y][x].z * cos(dx) * sin(dy);
+//
+//
+//			map->rot[y][x].y = map->bas[y][x].y * cos(dx) +
+//					map->bas[y][x].z * sin(dx);
+//
+//
+//			map->rot[y][x].z = map->bas[y][x].x * sin(dy) -
+//					map->bas[y][x].y * sin(dx) * cos(dy) +
+//					map->bas[y][x].z * cos(dx) * cos(dy);
+
+
+
+			map->rot[y][x].x = map->bas[y][x].x * cos(dy) * cos(dz) +
+							   map->bas[y][x].y * (sin(dx) * sin(dy) * cos(dz) + cos(dx) * sin(dz)) +
+							   map->bas[y][x].z * (-cos(dx) * sin(dy) * cos(dz) + sin(dx) * sin(dz));
+
+
+			map->rot[y][x].y = -map->bas[y][x].x * cos(dy) * sin(dz) +
+								map->bas[y][x].y * (-sin(dx) * sin(dy) * sin(dz) + cos(dx) * cos(dz)) +
+							   map->bas[y][x].z * (cos(dx) * sin(dy) * sin(dz) + sin(dx) * cos(dz));
+
+
+			map->rot[y][x].z = map->bas[y][x].x * sin(dy) -
+							   map->bas[y][x].y * sin(dx) * cos(dy) +
+							   map->bas[y][x].z * cos(dx) * cos(dy);
+
+
+
+//			map->rot[y][x].x = (map->bas[y][x].x);
+//			map->rot[y][x].y = (map->bas[y][x].y) * cos(dx) + map->bas[y][x].z * sin(dx);
+//			map->rot[y][x].z = (-map->bas[y][x].y)  * sin(dx) + map->bas[y][x].z * cos(dx);
+//
+//			map->rot[y][x].x = (map->rot[y][x].x) * cos(dy) - map->rot[y][x].z * sin(dy);
+//			map->rot[y][x].y = (map->rot[y][x].y);
+//			map->rot[y][x].z = (map->rot[y][x].x) * sin(dy) + map->rot[y][x].z * cos(dy);
+//
+//			map->rot[y][x].x = (map->rot[y][x].x) * cos(dz) + (map->rot[y][x].y) * sin(dz);
+//			map->rot[y][x].y = -(map->rot[y][x].x) * sin(dz) + (map->rot[y][x].y) * cos(dz);
+//			map->rot[y][x].z = map->rot[y][x].z;
+
+			map->rot[y][x].x = map->rot[y][x].x + fdf->w_size.x / 2;
+			map->rot[y][x].y = map->rot[y][x].y + fdf->w_size.y / 2;
+
+
+//			map->rot[y][x].x = (map->bas[y][x].x - map->cols / 2);
+//			map->rot[y][x].y = (map->bas[y][x].y  - map->rows / 2) * cos(dx) + map->bas[y][x].z * sin(dx);
+//			map->rot[y][x].z = (-(map->bas[y][x].y  - map->rows / 2))  * sin(dx) + map->bas[y][x].z * cos(dx);
+//
+//			map->rot[y][x].x = (map->rot[y][x].x - map->cols / 2) * cos(dy) + map->rot[y][x].z * sin(dy);
+//			map->rot[y][x].y = (map->rot[y][x].y  - map->rows / 2);
+//			map->rot[y][x].z = -(map->rot[y][x].x - map->cols / 2) * sin(dy) + map->rot[y][x].z * cos(dy);
+//
+//			map->rot[y][x].x = (map->rot[y][x].x - map->cols / 2) * cos(dz) - (map->rot[y][x].y  - map->rows / 2) * sin(dz);
+//			map->rot[y][x].y = (map->rot[y][x].x - map->cols / 2) * sin(dz) + (map->rot[y][x].y  - map->rows / 2) * cos(dz);
+//			map->rot[y][x].z = map->rot[y][x].z;
 		}
 	}
 }
 
-void	rot_y(double deg, t_map *map)
-{
-	int x;
-	int y;
-
-	y = -1;
-	while (++y < map->rows)
-	{
-		x = -1;
-		while (++x < map->rows)
-		{
-			map->rot[y][x].x = (map->rot[y][x].x * cos(deg) + map->rot[y][x].z * sin(deg));
-			map->rot[y][x].y = (map->rot[y][x].y);
-			map->rot[y][x].z = (-map->rot[y][x].x * sin(deg) + map->rot[y][x].z * cos(deg));
-		}
-	}
-}
-
-void	rot_z(double deg, t_map *map)
-{
-	int x;
-	int y;
-
-	y = -1;
-	while (++y < map->rows)
-	{
-		x = -1;
-		while (++x < map->rows)
-		{
-			map->rot[y][x].x = (map->rot[y][x].x * cos(deg) - map->rot[y][x].y * sin(deg));
-			map->rot[y][x].y = (map->rot[y][x].x * sin(deg) + map->rot[y][x].y * cos(deg));
-			map->rot[y][x].z = map->rot[y][x].z;
-		}
-	}
-}
+//void	rot_y(double deg, t_map *map)
+//{
+//	int x;
+//	int y;
+//
+//	y = -1;
+//	while (++y < map->rows)
+//	{
+//		x = -1;
+//		while (++x < map->rows)
+//		{
+//			map->rot[y][x].x = (map->rot[y][x].x - map->cols / 2) * cos(deg) + map->rot[y][x].z * sin(deg);
+//			map->rot[y][x].y = (map->rot[y][x].y  - map->rows / 2);
+//			map->rot[y][x].z = -(map->rot[y][x].x - map->cols / 2) * sin(deg) + map->rot[y][x].z * cos(deg);
+//		}
+//	}
+//}
+//
+//void	rot_z(double deg, t_map *map)
+//{
+//	int x;
+//	int y;
+//
+//	y = -1;
+//	while (++y < map->rows)
+//	{
+//		x = -1;
+//		while (++x < map->rows)
+//		{
+//			map->rot[y][x].x = (map->rot[y][x].x - map->cols / 2) * cos(deg) - (map->rot[y][x].y  - map->rows / 2) * sin(deg);
+//			map->rot[y][x].y = (map->rot[y][x].x - map->cols / 2) * sin(deg) + (map->rot[y][x].y  - map->rows / 2) * cos(deg);
+//			map->rot[y][x].z = map->rot[y][x].z;
+//		}
+//	}
+//}
 
 void	draw_map(t_fdf *fdf, t_map *map)
 {
@@ -98,9 +154,9 @@ int		key_hook(int kcode, void *data)
 	if (kcode == 85)
 		deg_z += 0.0174533;
 
-	rot_x(deg_x, fdf->map);
-	rot_y(deg_y, fdf->map);
-	rot_z(deg_z, fdf->map);
+	rot_x(deg_x, deg_y, deg_z, fdf->map, fdf);
+//	rot_y(deg_y, fdf->map);
+//	rot_z(deg_z, fdf->map);
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
 	draw_map(fdf, fdf->map);
 	return (0);
@@ -125,21 +181,21 @@ int main()
 
 	t_map	map;
 
-	read_fdf_map("elem-fract.fdf", &map);
+	read_fdf_map("t2.fdf", &map);
 
-	int y;
-	int x;
-
-	y = -1;
-	while (++y < map.rows)
-	{
-		x = -1;
-		while (++x < map.cols)
-		{
-			map.bas[y][x].x += 400;
-			map.bas[y][x].y += 400;
-		}
-	}
+//	int y;
+//	int x;
+//
+//	y = -1;
+//	while (++y < map.rows)
+//	{
+//		x = -1;
+//		while (++x < map.cols)
+//		{
+//			map.bas[y][x].x += 400;
+//			map.bas[y][x].y += 400;
+//		}
+//	}
 
 //	int i = -1, j;
 //	while (++i < map.rows)
@@ -165,12 +221,12 @@ int main()
 //		ft_printf("\n");
 //	}
 
-	fdf.windows_size.x = 2000;
-	fdf.windows_size.y = 1200;
+	fdf.w_size.x = 2000;
+	fdf.w_size.y = 1200;
 
 	fdf.mlx_ptr = mlx_init();
-	fdf.win_ptr = mlx_new_window(fdf.mlx_ptr, fdf.windows_size.x,
-			fdf.windows_size.y, "mlx 42");
+	fdf.win_ptr = mlx_new_window(fdf.mlx_ptr, fdf.w_size.x,
+			fdf.w_size.y, "mlx 42");
 	draw_map(&fdf, &map);
 	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
 	mlx_loop(fdf.mlx_ptr);
