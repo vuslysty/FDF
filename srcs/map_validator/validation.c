@@ -61,6 +61,7 @@ static t_point	**get_map(t_list *list, t_map *map)
 			get_z_and_color(&mas[i][j], tmp[j]);
 			mas[i][j].y = i * 5;
 			mas[i][j].x = j * 5;
+			mas[i][j].z *= 5;
 		}
 		list = list->next;
 	}

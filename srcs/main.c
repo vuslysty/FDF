@@ -4,7 +4,7 @@
 #include "fdf.h"
 #include "math.h"
 
-void	rot_x(double dx, double dy, double dz, t_map *map, t_fdf *fdf)
+void	rotate(double dx, double dy, double dz, t_map *map, t_fdf *fdf)
 {
 	int x;
 	int y;
@@ -15,65 +15,18 @@ void	rot_x(double dx, double dy, double dz, t_map *map, t_fdf *fdf)
 		x = -1;
 		while (++x < map->rows)
 		{
-
-//			map->rot[y][x].x = map->bas[y][x].x * cos(dy) +
-//					map->bas[y][x].y * sin(dx) * sin(dy) -
-//					map->bas[y][x].z * cos(dx) * sin(dy);
-//
-//
-//			map->rot[y][x].y = map->bas[y][x].y * cos(dx) +
-//					map->bas[y][x].z * sin(dx);
-//
-//
-//			map->rot[y][x].z = map->bas[y][x].x * sin(dy) -
-//					map->bas[y][x].y * sin(dx) * cos(dy) +
-//					map->bas[y][x].z * cos(dx) * cos(dy);
-
-
-
-			map->rot[y][x].x = map->bas[y][x].x * cos(dy) * cos(dz) +
-							   map->bas[y][x].y * (sin(dx) * sin(dy) * cos(dz) + cos(dx) * sin(dz)) +
-							   map->bas[y][x].z * (-cos(dx) * sin(dy) * cos(dz) + sin(dx) * sin(dz));
-
-
-			map->rot[y][x].y = -map->bas[y][x].x * cos(dy) * sin(dz) +
-								map->bas[y][x].y * (-sin(dx) * sin(dy) * sin(dz) + cos(dx) * cos(dz)) +
-							   map->bas[y][x].z * (cos(dx) * sin(dy) * sin(dz) + sin(dx) * cos(dz));
-
-
-			map->rot[y][x].z = map->bas[y][x].x * sin(dy) -
-							   map->bas[y][x].y * sin(dx) * cos(dy) +
-							   map->bas[y][x].z * cos(dx) * cos(dy);
-
-
-
-//			map->rot[y][x].x = (map->bas[y][x].x);
-//			map->rot[y][x].y = (map->bas[y][x].y) * cos(dx) + map->bas[y][x].z * sin(dx);
-//			map->rot[y][x].z = (-map->bas[y][x].y)  * sin(dx) + map->bas[y][x].z * cos(dx);
-//
-//			map->rot[y][x].x = (map->rot[y][x].x) * cos(dy) - map->rot[y][x].z * sin(dy);
-//			map->rot[y][x].y = (map->rot[y][x].y);
-//			map->rot[y][x].z = (map->rot[y][x].x) * sin(dy) + map->rot[y][x].z * cos(dy);
-//
-//			map->rot[y][x].x = (map->rot[y][x].x) * cos(dz) + (map->rot[y][x].y) * sin(dz);
-//			map->rot[y][x].y = -(map->rot[y][x].x) * sin(dz) + (map->rot[y][x].y) * cos(dz);
-//			map->rot[y][x].z = map->rot[y][x].z;
-
+			map->rot[y][x].x = (map->bas[y][x].x - map->cols / 2 * 5) * cos(dy) * cos(dz) +
+					(map->bas[y][x].y - (map->rows / 2) * 5) * (sin(dx) * sin(dy) * cos(dz) + cos(dx) * sin(dz)) +
+					map->bas[y][x].z * (-cos(dx) * sin(dy) * cos(dz) + sin(dx) * sin(dz));
+			map->rot[y][x].y = -(map->bas[y][x].x - map->cols / 2 * 5) * cos(dy) * sin(dz) +
+					(map->bas[y][x].y - (map->rows / 2) * 5) * (-sin(dx) * sin(dy) * sin(dz) + cos(dx) * cos(dz)) +
+					map->bas[y][x].z * (cos(dx) * sin(dy) * sin(dz) + sin(dx) * cos(dz));
+			map->rot[y][x].z = (map->bas[y][x].x - map->cols / 2 * 5) * sin(dy) -
+					(map->bas[y][x].y - (map->rows / 2) * 5) * sin(dx) * cos(dy) +
+					map->bas[y][x].z * cos(dx) * cos(dy);
 			map->rot[y][x].x = map->rot[y][x].x + fdf->w_size.x / 2;
 			map->rot[y][x].y = map->rot[y][x].y + fdf->w_size.y / 2;
 
-
-//			map->rot[y][x].x = (map->bas[y][x].x - map->cols / 2);
-//			map->rot[y][x].y = (map->bas[y][x].y  - map->rows / 2) * cos(dx) + map->bas[y][x].z * sin(dx);
-//			map->rot[y][x].z = (-(map->bas[y][x].y  - map->rows / 2))  * sin(dx) + map->bas[y][x].z * cos(dx);
-//
-//			map->rot[y][x].x = (map->rot[y][x].x - map->cols / 2) * cos(dy) + map->rot[y][x].z * sin(dy);
-//			map->rot[y][x].y = (map->rot[y][x].y  - map->rows / 2);
-//			map->rot[y][x].z = -(map->rot[y][x].x - map->cols / 2) * sin(dy) + map->rot[y][x].z * cos(dy);
-//
-//			map->rot[y][x].x = (map->rot[y][x].x - map->cols / 2) * cos(dz) - (map->rot[y][x].y  - map->rows / 2) * sin(dz);
-//			map->rot[y][x].y = (map->rot[y][x].x - map->cols / 2) * sin(dz) + (map->rot[y][x].y  - map->rows / 2) * cos(dz);
-//			map->rot[y][x].z = map->rot[y][x].z;
 		}
 	}
 }
@@ -125,6 +78,7 @@ void	draw_map(t_fdf *fdf, t_map *map)
 		x = -1;
 		while (++x < map->cols)
 		{
+
 			if (x != map->cols - 1)
 				draw_gradient_line(&map->rot[y][x], &map->rot[y][x + 1], fdf, map->rot[y][x]);
 			if (y != map->rows - 1)
@@ -154,9 +108,7 @@ int		key_hook(int kcode, void *data)
 	if (kcode == 85)
 		deg_z += 0.0174533;
 
-	rot_x(deg_x, deg_y, deg_z, fdf->map, fdf);
-//	rot_y(deg_y, fdf->map);
-//	rot_z(deg_z, fdf->map);
+	rotate(deg_x, deg_y, deg_z, fdf->map, fdf);
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
 	draw_map(fdf, fdf->map);
 	return (0);
@@ -181,7 +133,7 @@ int main()
 
 	t_map	map;
 
-	read_fdf_map("t2.fdf", &map);
+	read_fdf_map("20-60.fdf", &map);
 
 //	int y;
 //	int x;
