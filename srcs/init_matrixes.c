@@ -10,4 +10,5 @@ void		init_matrixes(t_matrixes *matrixes, t_transform_p *param)
 	init_scale(matrixes, param);
 
 	init_one(matrixes, param);
+
 }

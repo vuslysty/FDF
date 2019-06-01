@@ -23,6 +23,9 @@ typedef struct			s_fdf
 	struct s_point		w_size;
 	void				*mlx_ptr;
 	void				*win_ptr;
+	void				*img_ptr;
+	int 				**frame;
+	char 				*img;
 }						t_fdf;
 
 typedef struct			s_map
@@ -31,6 +34,7 @@ typedef struct			s_map
 	struct s_point		**bas;
 	int 				cols;
 	int 				rows;
+	int 				deep;
 }						t_map;
 
 typedef struct			s_matrix
@@ -51,7 +55,7 @@ typedef struct			s_matrixes
 	struct s_matrix 	*shift;
 	struct s_matrix 	*one;
 
-	struct s_matrix 	*result_matrix;
+	struct s_matrix 	*base;
 	struct s_matrix 	*result_point;
 }						t_matrixes;
 
@@ -90,9 +94,12 @@ void	init_rot_z(t_matrixes *matrixes, t_transform_p *p);
 void	init_translate(t_matrixes *matrixes, t_transform_p *p);
 
 void	init_one(t_matrixes *matrixes, t_transform_p *p);
+void	init_base(t_matrixes *matrixes, t_transform_p *p);
 
-void		init_matrixes(t_matrixes *matrixes, t_transform_p *param);
+void	init_matrixes(t_matrixes *matrixes, t_transform_p *param);
 
 void	first_init_matrixes(t_matrixes *matrixes);
+int put_pixel(t_fdf *fdf, int x, int y, int color);
+
 
 #endif

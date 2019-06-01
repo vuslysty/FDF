@@ -24,8 +24,8 @@ void	first_init_matrixes(t_matrixes *matrixes)
 	matrixes->scale = init_matrix(4, 4);
 	matrixes->partica_scale = init_matrix(4, 4);
 	matrixes->shift = init_matrix(4, 4);
-	matrixes->result_matrix = init_matrix(4, 4);
 	matrixes->result_point = init_matrix(1, 4);
 
+	matrixes->base = init_matrix(4, 4);
 	matrixes->one = init_matrix(4, 4);
 }

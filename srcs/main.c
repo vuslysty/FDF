@@ -15,16 +15,16 @@ void	rotate(t_map *map, t_fdf *fdf)
 		x = -1;
 		while (++x < map->rows)
 		{
-			fdf->matrixes->result_point->mtx[0][0] = map->bas[y][x].x;
-			fdf->matrixes->result_point->mtx[0][1] = map->bas[y][x].y;
-			fdf->matrixes->result_point->mtx[0][2] = map->bas[y][x].z;
+			fdf->matrixes->result_point->mtx[0][0] = map->bas[y][x].x * fdf->param->s_all;
+			fdf->matrixes->result_point->mtx[0][1] = map->bas[y][x].y * fdf->param->s_all;;
+			fdf->matrixes->result_point->mtx[0][2] = map->bas[y][x].z * fdf->param->s_all;;
 			fdf->matrixes->result_point->mtx[0][3] = 1;
 
-			fdf->matrixes->result_point = mult_matrixes(fdf->matrixes->result_point, fdf->matrixes->result_matrix);
+			fdf->matrixes->result_point = mult_matrixes(fdf->matrixes->result_point, fdf->matrixes->base);
 
-			map->bas[y][x].x = fdf->matrixes->result_point->mtx[0][0];
-			map->bas[y][x].y = fdf->matrixes->result_point->mtx[0][1];
-			map->bas[y][x].z = fdf->matrixes->result_point->mtx[0][2];
+			map->rot[y][x].x = fdf->matrixes->result_point->mtx[0][0];
+			map->rot[y][x].y = fdf->matrixes->result_point->mtx[0][1];
+			map->rot[y][x].z = fdf->matrixes->result_point->mtx[0][2];
 
 //			map->rot[y][x].x = (map->bas[y][x].x - map->cols / 2 * 5) * cos(dy) * cos(dz) +
 //					(map->bas[y][x].y - (map->rows / 2) * 5) * (sin(dx) * sin(dy) * cos(dz) + cos(dx) * sin(dz)) +
@@ -62,100 +62,187 @@ void	draw_map(t_fdf *fdf, t_map *map)
 	}
 }
 
+
 int		key_hook(int kcode, void *data)
 {
 	t_fdf			*fdf;
 
 	fdf = (t_fdf*)data;
-	if (kcode == 89)
-		fdf->param->rx = 0.0174533;
-	if (kcode == 92)
-		fdf->param->rx = 0.0174533;
-	if (kcode == 86)
-		fdf->param->ry -= 0.0174533;
-	if (kcode == 88)
-		fdf->param->ry += 0.0174533;
-	if (kcode == 83)
-		fdf->param->rz -= 0.0174533;
-	if (kcode == 85)
-		fdf->param->rz += 0.0174533;
+	if (kcode == 89 || kcode == 92)
+		fdf->param->rx += kcode == 89 ? -0.0274533 : 0.0274533;
+	else if (kcode == 86 || kcode == 88)
+		fdf->param->ry += kcode == 86 ? -0.0274533 : 0.0274533;
+	else if (kcode == 83 || kcode == 85)
+		fdf->param->rz += kcode == 83 ? -0.0274533 : 0.0274533;
+//	else if (kcode == 123 || kcode == 124)
+//		fdf->param->tx += kcode == 123 ? -5 : 5;
+//	else if (kcode == 125 || kcode == 126)
+//		fdf->param->ty += kcode == 125 ? 5 : -5;
+//
+	if (kcode == 27 || kcode == 24)
+	{
+		fdf->param->s_all += kcode == 27 ? -1 : 1;
+	}
+//
+//	else if (kcode == 78 || kcode == 69)
+//		fdf->param->tz += kcode == 78 ? -15 : 15;
 
-//	fdf->param->tx = fdf->w_size.x / 2;
-//	fdf->param->ty = fdf->w_size.y / 2;
-//	fdf->param->tz;
+	fdf->param->tx = -fdf->map->rows * fdf->param->s_all / 2;
+	fdf->param->ty = -fdf->map->cols * fdf->param->s_all / 2;
+	fdf->param->tz = -fdf->map->deep * fdf->param->s_all;
 
-	fdf->param->tx = 0;
-	fdf->param->ty = 0;
-
-	int c = 50;
-	fdf->param->sx = c;
-	fdf->param->sy = c;
-	fdf->param->sz = c;
-
-	fdf->param->tx -= fdf->map->rows * c / 2;
-	fdf->param->ty -= fdf->map->cols * c / 2;
 
 	init_matrixes(fdf->matrixes, fdf->param);
 
-	fdf->matrixes->result_matrix = mult_matrixes(fdf->matrixes->one, fdf->matrixes->partica_scale);
-	fdf->matrixes->result_matrix = mult_matrixes(fdf->matrixes->result_matrix, fdf->matrixes->translate);
+	fdf->matrixes->base = mult_matrixes(fdf->matrixes->one, fdf->matrixes->translate);
 
-	fdf->matrixes->result_matrix = mult_matrixes(fdf->matrixes->result_matrix, fdf->matrixes->rot_x);
-	fdf->matrixes->result_matrix = mult_matrixes(fdf->matrixes->result_matrix, fdf->matrixes->rot_y);
-	fdf->matrixes->result_matrix = mult_matrixes(fdf->matrixes->result_matrix, fdf->matrixes->rot_z);
-//	fdf->matrixes->result_matrix = mult_matrixes(fdf->matrixes->result_matrix, fdf->matrixes->partica_scale);
-
-	fdf->param->tx += fdf->map->rows * c / 2;
-	fdf->param->ty += fdf->map->cols * c / 2;
+	fdf->matrixes->base = mult_matrixes(fdf->matrixes->base,
+											fdf->matrixes->rot_x);
+	fdf->matrixes->base = mult_matrixes(fdf->matrixes->base,
+											fdf->matrixes->rot_y);
+	fdf->matrixes->base = mult_matrixes(fdf->matrixes->base,
+											fdf->matrixes->rot_z);
+//
+	fdf->param->tx += fdf->map->rows * fdf->param->s_all / 2;
+	fdf->param->ty += fdf->map->cols * fdf->param->s_all / 2;
+	fdf->param->tz += fdf->map->deep * fdf->param->s_all;
 
 	fdf->param->tx += fdf->w_size.x / 2;
 	fdf->param->ty += fdf->w_size.y / 2;
 
-	init_matrixes(fdf->matrixes, fdf->param);
-//
-	fdf->matrixes->result_matrix = mult_matrixes(fdf->matrixes->result_matrix, fdf->matrixes->translate);
+
+
+	init_translate(fdf->matrixes, fdf->param);
+	fdf->matrixes->base = mult_matrixes(fdf->matrixes->base, fdf->matrixes->translate);
 
 	rotate(fdf->map, fdf);
+
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
 	draw_map(fdf, fdf->map);
+
+//	put_pixel(fdf, 10, fdf->param->s_all, 0xffffff);
+	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img_ptr, 0, 0);
+	ft_bzero(fdf->img, 8000 * fdf->w_size.y);
+
 	return (0);
 }
 
 int main()
 {
 	t_fdf	fdf;
-
+//
 	fdf.map = (t_map*)ft_memalloc(sizeof(t_map));
-	read_fdf_map("elem.fdf", fdf.map);
-
+	read_fdf_map("elem-fract.fdf", fdf.map);
+//
 	fdf.matrixes = (t_matrixes*)ft_memalloc(sizeof(t_matrixes));
 	fdf.param = (t_transform_p*)ft_memalloc(sizeof(t_transform_p));
 
 	first_init_matrixes(fdf.matrixes);
+	init_base(fdf.matrixes, fdf.param);
+
+	fdf.param->s_all = 1;
+
+//	fdf.param->tx -= fdf.map->rows / 2;
+//	fdf.param->ty -= fdf.map->cols / 2;
+
+//	init_translate(fdf.matrixes, fdf.param);
+//	fdf.matrixes->base = mult_matrixes(fdf.matrixes->base, fdf.matrixes->translate);
 
 	fdf.map->rot = get_copy_base_map(fdf.map);
+//
+	int x, y;
+	int minz = 999999, maxz = -999999;
 
-//	y = -1;
-//	while (++y < map.rows)
-//	{
-//		x = -1;
-//		while (++x < map.cols)
-//			ft_printf("%i ", fdf.map->rot[y][x].x);
-//		ft_printf("\n");
-//	}
-
+	y = -1;
+	while (++y < fdf.map->rows)
+	{
+		x = -1;
+		while (++x < fdf.map->cols)
+		{
+			if (fdf.map->bas[x][y].z < minz)
+				minz = fdf.map->bas[x][y].z;
+			if (fdf.map->bas[x][y].z > maxz)
+				maxz = fdf.map->bas[x][y].z;
+		}
+	}
+	fdf.map->deep = (minz + maxz) / 2;
+//
 	fdf.w_size.x = 2000;
 	fdf.w_size.y = 1200;
-
+//
 	fdf.mlx_ptr = mlx_init();
 	fdf.win_ptr = mlx_new_window(fdf.mlx_ptr, fdf.w_size.x,
 			fdf.w_size.y, "mlx 42");
-	draw_map(&fdf, fdf.map);
+//	draw_map(&fdf, fdf.map);
+//	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
+//
+//
+//	mlx_loop(fdf.mlx_ptr);
+
+	fdf.img_ptr = mlx_new_image(fdf.mlx_ptr, fdf.w_size.x, fdf.w_size.y);
+
+	char *img;
+
+	int bits_per_pixel;
+	int size_line;
+	int endian;
+
+	img = mlx_get_data_addr (fdf.img_ptr, &bits_per_pixel, &size_line, &endian);
+
+
+	int **frame = (int**)ft_memalloc(sizeof(int*) * fdf.w_size.y);
+
+	int i = -1;
+	while (++i < fdf.w_size.y)
+		frame[i] = (img + (size_line * i));
+
+	fdf.frame = frame;
+	fdf.img = img;
+
+//	mlx_put_image_to_window(fdf.mlx_ptr, fdf.win_ptr, fdf.img_ptr, 0, 0);
+
+
+
+	put_pixel(&fdf, 10, 10, 0xff00ff);
+
 	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
+
+
 	mlx_loop(fdf.mlx_ptr);
+
+//	mlx_pixel_put()
 
 	return (0);
 }
 
 // 359 degrees = 6,26573 radian
 // 1   degrees = 0,0174533 rad
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
