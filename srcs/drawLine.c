@@ -3,6 +3,7 @@
 
 void	init_values(t_point *delta, t_point *sign, t_point *a, t_point *b)
 {
+
 	delta->x = ABS(b->x - a->x);
 	delta->y = ABS(b->y - a->y);
 	sign->x = a->x < b->x ? 1 : -1;

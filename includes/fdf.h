@@ -61,9 +61,9 @@ typedef struct			s_matrixes
 
 typedef struct			s_transform_p
 {
-	int					tx;
-	int 				ty;
-	int 				tz;
+	double				tx;
+	double 				ty;
+	double 				tz;
 	int 				sx;
 	int 				sy;
 	int 				sz;
@@ -83,7 +83,7 @@ void		read_fdf_map(char *file, t_map *map);
 int			get_color(t_point current, t_point start, t_point end, t_point delta);
 void		draw_gradient_line(t_point *a, t_point *b, t_fdf *fdf, t_point curr);
 t_point		**get_copy_base_map(t_map *map);
-t_matrix	*mult_matrixes(t_matrix *m1, t_matrix *m2);
+t_matrix	*mult_matrixes(t_matrix *m1, t_matrix *m2, int opt);
 void		*mult_matrixes_arg(t_matrix *m1, t_matrix *m2, t_matrix *m3);
 
 void	init_partical_scale(t_matrixes *matrixes, t_transform_p *p);
