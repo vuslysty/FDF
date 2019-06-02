@@ -4,6 +4,8 @@
 #include "fdf.h"
 #include "math.h"
 
+#define FOCAL_DISTANCE 80
+
 void	rotate(t_map *map, t_fdf *fdf)
 {
 	int x;
@@ -13,7 +15,7 @@ void	rotate(t_map *map, t_fdf *fdf)
 	while (++y < map->rows)
 	{
 		x = -1;
-		while (++x < map->rows)
+		while (++x < map->cols)
 		{
 			fdf->matrixes->result_point->mtx[0][0] = map->bas[y][x].x * fdf->param->s_all;
 			fdf->matrixes->result_point->mtx[0][1] = map->bas[y][x].y * fdf->param->s_all;
@@ -25,6 +27,12 @@ void	rotate(t_map *map, t_fdf *fdf)
 			map->rot[y][x].x = fdf->matrixes->result_point->mtx[0][0];
 			map->rot[y][x].y = fdf->matrixes->result_point->mtx[0][1];
 			map->rot[y][x].z = fdf->matrixes->result_point->mtx[0][2];
+
+
+//			if(map->rot[y][x].z == 0)
+//				map->rot[y][x].z = 1;
+//			map->rot[y][x].x = FOCAL_DISTANCE * map->rot[y][x].x / map->rot[y][x].z;
+//			map->rot[y][x].y = FOCAL_DISTANCE * map->rot[y][x].y / map->rot[y][x].z;
 
 //			map->rot[y][x].x = (map->bas[y][x].x - map->cols / 2 * 5) * cos(dy) * cos(dz) +
 //					(map->bas[y][x].y - (map->rows / 2) * 5) * (sin(dx) * sin(dy) * cos(dz) + cos(dx) * sin(dz)) +
@@ -57,12 +65,12 @@ void	draw_map(t_fdf *fdf, t_map *map)
 				{
 					draw_gradient_line(&map->rot[y][x], &map->rot[y][x + 1], fdf,
 									   map->rot[y][x]);
-					if (y != 0)
-						draw_gradient_line(&map->rot[y][x], &map->rot[y - 1][x + 1], fdf,
-										   map->rot[y][x]);
-					if (y != map->rows - 1)
-						draw_gradient_line(&map->rot[y][x], &map->rot[y + 1][x + 1], fdf,
-										   map->rot[y][x]);
+//					if (y != 0)
+//						draw_gradient_line(&map->rot[y][x], &map->rot[y - 1][x + 1], fdf,
+//										   map->rot[y][x]);
+//					if (y != map->rows - 1)
+//						draw_gradient_line(&map->rot[y][x], &map->rot[y + 1][x + 1], fdf,
+//										   map->rot[y][x]);
 				}
 				if (y != map->rows - 1)
 				{
@@ -96,22 +104,22 @@ int		key_hook(int kcode, void *data)
 	if (kcode == 27 || kcode == 24)
 		fdf->param->s_all += kcode == 27 ? -1 : 1;
 
-	fdf->param->tx = -(fdf->map->rows - 1) * (fdf->param->s_all / 2);
-	fdf->param->ty = -(fdf->map->cols - 1) * (fdf->param->s_all / 2);
+	fdf->param->tx = -((fdf->map->cols - 1) * (fdf->param->s_all)) / 2;
+	fdf->param->ty = -((fdf->map->rows - 1) * (fdf->param->s_all)) / 2;
 
 	init_matrixes(fdf->matrixes, fdf->param);
 
 	fdf->matrixes->base = mult_matrixes(fdf->matrixes->one, fdf->matrixes->translate, 0);
 
 	fdf->matrixes->base = mult_matrixes(fdf->matrixes->base,
-											fdf->matrixes->rot_x, 1);
+											fdf->matrixes->rot_x, 0);
 	fdf->matrixes->base = mult_matrixes(fdf->matrixes->base,
 											fdf->matrixes->rot_y, 1);
 	fdf->matrixes->base = mult_matrixes(fdf->matrixes->base,
 											fdf->matrixes->rot_z, 1);
 //
-	fdf->param->tx += (fdf->map->rows - 1) * (fdf->param->s_all / 2);
-	fdf->param->ty += (fdf->map->cols - 1) * (fdf->param->s_all / 2);
+	fdf->param->tx += ((fdf->map->cols - 1) * (fdf->param->s_all)) / 2;
+	fdf->param->ty += ((fdf->map->rows - 1) * (fdf->param->s_all)) / 2;
 
 	fdf->param->tx += fdf->w_size.x / 2.0;
 	fdf->param->ty += fdf->w_size.y / 2.0;
@@ -126,7 +134,7 @@ int		key_hook(int kcode, void *data)
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
 	draw_map(fdf, fdf->map);
 
-//	put_pixel(fdf, 10, fdf->param->s_all, 0xffffff);
+	put_pixel(fdf, fdf->w_size.x / 2, fdf->w_size.y / 2, 0xff0000);
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img_ptr, 0, 0);
 	ft_bzero(fdf->img, 8000 * fdf->w_size.y);
 
@@ -138,16 +146,16 @@ int main()
 	t_fdf	fdf;
 //
 	fdf.map = (t_map*)ft_memalloc(sizeof(t_map));
-	read_fdf_map("test_maps/mars.fdf", fdf.map);
+	read_fdf_map("test_maps/42.fdf", fdf.map);
 
 	int i = -1;
-	while (++i < fdf.map->rows)
-	{
-		int j = -1;
-		while (++j < fdf.map->cols)
-			ft_printf("%i ", fdf.map->bas[i][j].y);
-		ft_printf("\n");
-	}
+//	while (++i < fdf.map->rows)
+//	{
+//		int j = -1;
+//		while (++j < fdf.map->cols)
+//			ft_printf("%i ", fdf.map->bas[i][j].y);
+//		ft_printf("\n");
+//	}
 
 
 
@@ -160,11 +168,6 @@ int main()
 
 	fdf.param->s_all = 1;
 
-//	fdf.param->tx -= fdf.map->rows / 2;
-//	fdf.param->ty -= fdf.map->cols / 2;
-
-//	init_translate(fdf.matrixes, fdf.param);
-//	fdf.matrixes->base = mult_matrixes(fdf.matrixes->base, fdf.matrixes->translate);
 
 	fdf.map->rot = get_copy_base_map(fdf.map);
 //
