@@ -100,14 +100,14 @@ static t_table	*init_trig_table(void)
 void			tr_rotate(double matrix[4][4], int dx, int dy, int dz)
 {
 	static t_table	*table = NULL;
-	double			mtx1[4][4];
-	double			mtx2[4][4];
+	double			mtx_tmp1[4][4];
+	double			mtx_tmp2[4][4];
 
 	if (table == NULL)
 		table = init_trig_table();
-	rot_y(table, matrix, mtx1, dy);
-	rot_x(table, mtx1, mtx2, dx);
-	rot_z(table, mtx2, matrix, dz);
+	rot_y(table, matrix, mtx_tmp1, dy);
+	rot_x(table, mtx_tmp1, mtx_tmp2, dx);
+	rot_z(table, mtx_tmp2, matrix, dz);
 }
 
 
