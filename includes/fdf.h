@@ -6,6 +6,7 @@
 # define FDF_FDF_H
 # include "libft.h"
 # include "math.h"
+# include "graphic.h"
 
 typedef struct			s_point
 {
@@ -26,6 +27,10 @@ typedef struct			s_fdf
 	void				*img_ptr;
 	int 				**frame;
 	char 				*img;
+
+
+	struct s_vertex		**mas;
+
 }						t_fdf;
 
 typedef struct			s_map
@@ -36,6 +41,13 @@ typedef struct			s_map
 	int 				rows;
 	int 				deep;
 }						t_map;
+//
+//typedef struct			s_map
+//{
+//	struct s_3d			**map;
+//	int 				cols;
+//	int 				rows;
+//}						t_map;
 
 typedef struct			s_matrix
 {
@@ -100,6 +112,15 @@ void	init_matrixes(t_matrixes *matrixes, t_transform_p *param);
 
 void	first_init_matrixes(t_matrixes *matrixes);
 int put_pixel(t_fdf *fdf, int x, int y, int color);
+
+
+
+
+
+
+
+
+void	init_mas_local(struct s_vertex **mas, t_map *map);
 
 
 #endif
