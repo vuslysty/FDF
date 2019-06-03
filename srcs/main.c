@@ -146,7 +146,7 @@ int main()
 	t_fdf	fdf;
 //
 	fdf.map = (t_map*)ft_memalloc(sizeof(t_map));
-	read_fdf_map("test_maps/42.fdf", fdf.map);
+	read_fdf_map("mars.fdf", fdf.map);
 
 	int i = -1;
 //	while (++i < fdf.map->rows)
