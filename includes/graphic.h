@@ -1,7 +1,7 @@
 #ifndef FDF_GRAPHIC_H
 #define FDF_GRAPHIC_H
 
-#include "fdf.h"
+//#include "fdf.h"
 
 typedef struct		s_2d
 {
@@ -14,10 +14,9 @@ typedef struct		s_3d
 	double 			x;
 	double 			y;
 	double 			z;
-	int				color;
 }					t_3d;
 
-typedef struct		t_vertex
+typedef struct		s_vertex
 {
 	struct s_3d		local;
 	struct s_3d		world;

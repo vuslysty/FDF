@@ -17,22 +17,23 @@ void	rotate(t_map *map, t_fdf *fdf)
 		x = -1;
 		while (++x < map->cols)
 		{
-			fdf->matrixes->result_point->mtx[0][0] = map->bas[y][x].x * fdf->param->s_all;
-			fdf->matrixes->result_point->mtx[0][1] = map->bas[y][x].y * fdf->param->s_all;
-			fdf->matrixes->result_point->mtx[0][2] = map->bas[y][x].z * fdf->param->s_all;
-			fdf->matrixes->result_point->mtx[0][3] = 1;
+//			fdf->matrixes->result_point->mtx[0][0] = map->bas[y][x].x * fdf->param->s_all;
+//			fdf->matrixes->result_point->mtx[0][1] = map->bas[y][x].y * fdf->param->s_all;
+//			fdf->matrixes->result_point->mtx[0][2] = map->bas[y][x].z * fdf->param->s_all;
+//			fdf->matrixes->result_point->mtx[0][3] = 1;
+//
+//			fdf->matrixes->result_point = mult_matrixes(fdf->matrixes->result_point, fdf->matrixes->base, 1);
 
-			fdf->matrixes->result_point = mult_matrixes(fdf->matrixes->result_point, fdf->matrixes->base, 1);
-
-			map->rot[y][x].x = fdf->matrixes->result_point->mtx[0][0];
-			map->rot[y][x].y = fdf->matrixes->result_point->mtx[0][1];
-			map->rot[y][x].z = fdf->matrixes->result_point->mtx[0][2];
+//		  	map->rot[y][x].x = fdf->mas[y][x].aligned.x;
+//			map->rot[y][x].y = fdf->mas[y][x].aligned.y;
+//			map->rot[y][x].z = fdf->mas[y][x].aligned.z;
 
 
-//			if(map->rot[y][x].z == 0)
-//				map->rot[y][x].z = 1;
-//			map->rot[y][x].x = FOCAL_DISTANCE * map->rot[y][x].x / map->rot[y][x].z;
-//			map->rot[y][x].y = FOCAL_DISTANCE * map->rot[y][x].y / map->rot[y][x].z;
+
+			if(fdf->mas[y][x].aligned.z == 0)
+				fdf->mas[y][x].aligned.z = 1;
+			map->rot[y][x].x = FOCAL_DISTANCE * fdf->mas[y][x].aligned.x / fdf->mas[y][x].aligned.z;
+			map->rot[y][x].y = FOCAL_DISTANCE * fdf->mas[y][x].aligned.y / fdf->mas[y][x].aligned.z;
 
 //			map->rot[y][x].x = (map->bas[y][x].x - map->cols / 2 * 5) * cos(dy) * cos(dz) +
 //					(map->bas[y][x].y - (map->rows / 2) * 5) * (sin(dx) * sin(dy) * cos(dz) + cos(dx) * sin(dz)) +
@@ -61,6 +62,7 @@ void	draw_map(t_fdf *fdf, t_map *map)
 		x = -1;
 		while (++x < map->cols)
 		{
+//			ft_printf("(%i,%i)  ", map->rot[y][x].x, map->rot[y][x].y);
 				if (x != map->cols - 1)
 				{
 					draw_gradient_line(&map->rot[y][x], &map->rot[y][x + 1], fdf,
@@ -79,17 +81,19 @@ void	draw_map(t_fdf *fdf, t_map *map)
 				}
 
 		}
+//		ft_printf("\n");
 	}
+//	ft_printf("\n");
 }
 
 
 int		key_hook(int kcode, void *data)
 {
 	t_fdf			*fdf;
+	int 			i, j;
 
-//	double			global;
 
-	double deg = 0.0474533;
+	int deg = 1;
 
 	fdf = (t_fdf*)data;
 	if (kcode == 89 || kcode == 92)
@@ -98,17 +102,74 @@ int		key_hook(int kcode, void *data)
 		fdf->param->ry += kcode == 86 ? -deg : deg;
 	else if (kcode == 83 || kcode == 85)
 		fdf->param->rz += kcode == 83 ? -deg : deg;
-//	else if (kcode == 123 || kcode == 124)
-//		fdf->param->tx += kcode == 123 ? -5 : 5;
-//	else if (kcode == 125 || kcode == 126)
-//		fdf->param->ty += kcode == 125 ? 5 : -5;
-//
+	else if (kcode == 123 || kcode == 124)
+		fdf->param->tx += kcode == 123 ? -5 : 5;
+	else if (kcode == 125 || kcode == 126)
+		fdf->param->ty += kcode == 125 ? 5 : -5;
+
 	if (kcode == 27 || kcode == 24)
-		fdf->param->s_all += kcode == 27 ? -1 : 1;
+		fdf->param->s_all += kcode == 27 ? -0.1 : 0.1;
 
 	//new *****
 
-//	init_mas_local(fdf->mas, fdf->map);
+	double mtx_glob[4][4];
+
+	init_mas_local(fdf->mas, fdf->map);
+
+	matrix_identity(mtx_glob);
+
+	tr_scale(mtx_glob, fdf->param->s_all, fdf->param->s_all, fdf->param->s_all);
+	tr_rotate(mtx_glob, fdf->param->rx, fdf->param->ry, fdf->param->rz);
+
+
+
+	tr_translate(mtx_glob, fdf->param->tx, fdf->param->ty, fdf->param->tz);
+
+//		ft_printf("\n");
+//	i = -1;
+//	while (++i < 4)
+//	{
+//		j = -1;
+//		while (++j < 4)
+//			ft_printf("%f  ", mtx_glob[i][j]);
+//		ft_printf("\n");
+//	}
+
+
+	mult_local_by_glob_mtx(fdf->mas, fdf->map, mtx_glob);
+
+
+	matrix_identity(mtx_glob);
+	tr_translate(mtx_glob, -fdf->param->tx, -fdf->param->ty, -fdf->param->tz);
+	tr_rotate(mtx_glob, -fdf->param->rx, -fdf->param->ry, -fdf->param->rz);
+//	tr_scale(mtx_glob, -fdf->param->s_all, -fdf->param->s_all, -fdf->param->s_all);
+
+	mult_world_by_glob_mtx(fdf->mas, fdf->map, mtx_glob);
+
+//	while (++i < fdf->map->rows)
+//	{
+//		int j = -1;
+//		while (++j < fdf->map->cols)
+//		{
+//			ft_printf("(%f, %f)  ", fdf->mas[i][j].world.x, fdf->mas[i][j].world.y);
+//		}
+//		ft_printf("\n");
+//	}
+//	ft_printf("\n");
+
+
+//	i = -1;
+//	while (++i < fdf->map->rows)
+//	{
+//		j = -1;
+//		while (++j < fdf->map->cols)
+//		{
+//			ft_printf("(%.f, %.f)  ", fdf->mas[i][j].local.x, fdf->mas[i][j].local.y);
+//		}
+//		ft_printf("\n");
+//	}
+
+	rotate(fdf->map, fdf);
 
 
 	//end new *****
@@ -140,12 +201,12 @@ int		key_hook(int kcode, void *data)
 //
 //	rotate(fdf->map, fdf);
 //
-//	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
-//	draw_map(fdf, fdf->map);
+	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
+	draw_map(fdf, fdf->map);
 //
-//	put_pixel(fdf, fdf->w_size.x / 2, fdf->w_size.y / 2, 0xff0000);
-//	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img_ptr, 0, 0);
-//	ft_bzero(fdf->img, 8000 * fdf->w_size.y);
+	put_pixel(fdf, fdf->w_size.x / 2, fdf->w_size.y / 2, 0xff0000);
+	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img_ptr, 0, 0);
+	ft_bzero(fdf->img, 8000 * fdf->w_size.y);
 
 	return (0);
 }
@@ -228,43 +289,25 @@ int		key_hook(int kcode, void *data)
 int main()
 {
 	t_fdf	fdf;
-//
+
 	fdf.map = (t_map*)ft_memalloc(sizeof(t_map));
-	read_fdf_map("42.fdf", fdf.map);
+	read_fdf_map("mars.fdf", fdf.map);
 
-	int i = -1;
-//	while (++i < fdf.map->rows)
-//	{
-//		int j = -1;
-//		while (++j < fdf.map->cols)
-//			ft_printf("%i ", fdf.map->bas[i][j].y);
-//		ft_printf("\n");
-//	}
-
+	int i;
 
 	fdf.param = (t_transform_p*)ft_memalloc(sizeof(t_transform_p));
 
-	first_init_matrixes(fdf.matrixes);
-	init_base(fdf.matrixes, fdf.param);
-
-	fdf.param->s_all = 1;
+	fdf.param->s_all = 0;
 
 
 	fdf.map->rot = get_copy_base_map(fdf.map);
-//
 
-//
 	fdf.w_size.x = 2000;
 	fdf.w_size.y = 1200;
-//
+
 	fdf.mlx_ptr = mlx_init();
 	fdf.win_ptr = mlx_new_window(fdf.mlx_ptr, fdf.w_size.x,
 								 fdf.w_size.y, "mlx 42");
-//	draw_map(&fdf, fdf.map);
-//	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
-//
-//
-//	mlx_loop(fdf.mlx_ptr);
 
 	fdf.img_ptr = mlx_new_image(fdf.mlx_ptr, fdf.w_size.x, fdf.w_size.y);
 
@@ -276,7 +319,6 @@ int main()
 
 	img = mlx_get_data_addr (fdf.img_ptr, &bits_per_pixel, &size_line, &endian);
 
-
 	int **frame = (int**)ft_memalloc(sizeof(int*) * fdf.w_size.y);
 
 //	int i = -1;
@@ -287,11 +329,30 @@ int main()
 	fdf.frame = frame;
 	fdf.img = img;
 
+	fdf.mas = (t_vertex**)ft_memalloc(sizeof(t_vertex*) * fdf.map->rows);
+	i = -1;
+	while (++i < fdf.map->rows)
+		fdf.mas[i] = (t_vertex *) ft_memalloc(sizeof(t_vertex) * fdf.map->cols);
+
+//	init_mas_local(fdf.mas, fdf.map);
+
+
+
+
+//	i = -1;
+//	while (++i < fdf.map->rows)
+//	{
+//		int j = -1;
+//		while (++j < fdf.map->cols)
+//		{
+//			mas[i][j].local.x = 10;
+//			ft_printf("(%f, %f)  ", mas[i][j].local.x, mas[i][j].local.y);
+//		}
+//		ft_printf("\n");
+//	}
+
 	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
-
-
 	mlx_loop(fdf.mlx_ptr);
-
 
 	return (0);
 }

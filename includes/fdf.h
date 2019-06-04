@@ -76,16 +76,16 @@ typedef struct			s_transform_p
 	double				tx;
 	double 				ty;
 	double 				tz;
-	int 				sx;
-	int 				sy;
-	int 				sz;
+	double 				sx;
+	double 				sy;
+	double 				sz;
 	double				s_all;
 	int 				shx;
 	int 				shy;
 	int 				shz;
-	double				rx;
-	double				ry;
-	double				rz;
+	int				rx;
+	int				ry;
+	int				rz;
 }						t_transform_p;
 
 void		draw_line(t_point *a, t_point *b, t_fdf *fdf, int color);
@@ -116,11 +116,9 @@ int put_pixel(t_fdf *fdf, int x, int y, int color);
 
 
 
-
-
-
-
 void	init_mas_local(struct s_vertex **mas, t_map *map);
+void	mult_local_by_glob_mtx(struct s_vertex **mas, t_map *map, double global[4][4]);
+void	mult_world_by_glob_mtx(struct s_vertex **mas, t_map *map, double global[4][4]);
 
 
 #endif

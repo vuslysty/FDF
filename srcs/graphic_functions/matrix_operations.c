@@ -41,10 +41,10 @@ void	vec_mult_matrix(t_3d *src, double mtx[4][4], t_3d *dst)
 	dst->x = src->x * mtx[0][0] +
 			src->y * mtx[1][0] +
 			src->z * mtx[2][0] + mtx[3][0];
-	dst->x = src->x * mtx[0][1] +
+	dst->y = src->x * mtx[0][1] +
 			src->y * mtx[1][1] +
 			src->z * mtx[2][1] + mtx[3][1];
-	dst->x = src->x * mtx[0][2] +
+	dst->z = src->x * mtx[0][2] +
 			src->y * mtx[1][2] +
 			src->z * mtx[2][2] + mtx[3][2];
 }

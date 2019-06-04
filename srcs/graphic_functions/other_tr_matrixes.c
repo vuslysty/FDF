@@ -47,9 +47,9 @@ void	tr_scale(double matrix[4][4], double sx, double sy, double sz)
 	};
 	double			mtx_tmp[4][4];
 
-	mtx_s[1][1] = sx;
-	mtx_s[2][2] = sy;
-	mtx_s[3][3] = sz;
+	mtx_s[0][0] = sx;
+	mtx_s[1][1] = sy;
+	mtx_s[2][2] = sz;
 	matrix_mult(matrix, mtx_s, mtx_tmp);
 	matrix_copy(mtx_tmp, matrix);
 }
