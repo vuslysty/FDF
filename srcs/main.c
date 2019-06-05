@@ -286,76 +286,76 @@ int		key_hook(int kcode, void *data)
 //}
 
 
-int main()
-{
-	t_fdf	fdf;
-
-	fdf.map = (t_map*)ft_memalloc(sizeof(t_map));
-	read_fdf_map("mars.fdf", fdf.map);
-
-	int i;
-
-	fdf.param = (t_transform_p*)ft_memalloc(sizeof(t_transform_p));
-
-	fdf.param->s_all = 0;
-
-
-	fdf.map->rot = get_copy_base_map(fdf.map);
-
-	fdf.w_size.x = 2000;
-	fdf.w_size.y = 1200;
-
-	fdf.mlx_ptr = mlx_init();
-	fdf.win_ptr = mlx_new_window(fdf.mlx_ptr, fdf.w_size.x,
-								 fdf.w_size.y, "mlx 42");
-
-	fdf.img_ptr = mlx_new_image(fdf.mlx_ptr, fdf.w_size.x, fdf.w_size.y);
-
-	char *img;
-
-	int bits_per_pixel;
-	int size_line;
-	int endian;
-
-	img = mlx_get_data_addr (fdf.img_ptr, &bits_per_pixel, &size_line, &endian);
-
-	int **frame = (int**)ft_memalloc(sizeof(int*) * fdf.w_size.y);
-
-//	int i = -1;
-	i = -1;
-	while (++i < fdf.w_size.y)
-		frame[i] = (img + (size_line * i));
-
-	fdf.frame = frame;
-	fdf.img = img;
-
-	fdf.mas = (t_vertex**)ft_memalloc(sizeof(t_vertex*) * fdf.map->rows);
-	i = -1;
-	while (++i < fdf.map->rows)
-		fdf.mas[i] = (t_vertex *) ft_memalloc(sizeof(t_vertex) * fdf.map->cols);
-
-//	init_mas_local(fdf.mas, fdf.map);
-
-
-
-
+//int main()
+//{
+//	t_fdf	fdf;
+//
+//	fdf.map = (t_map*)ft_memalloc(sizeof(t_map));
+//	read_fdf_map("mars.fdf", fdf.map);
+//
+//	int i;
+//
+//	fdf.param = (t_transform_p*)ft_memalloc(sizeof(t_transform_p));
+//
+//	fdf.param->s_all = 0;
+//
+//
+//	fdf.map->rot = get_copy_base_map(fdf.map);
+//
+//	fdf.w_size.x = 2000;
+//	fdf.w_size.y = 1200;
+//
+//	fdf.mlx_ptr = mlx_init();
+//	fdf.win_ptr = mlx_new_window(fdf.mlx_ptr, fdf.w_size.x,
+//								 fdf.w_size.y, "mlx 42");
+//
+//	fdf.img_ptr = mlx_new_image(fdf.mlx_ptr, fdf.w_size.x, fdf.w_size.y);
+//
+//	char *img;
+//
+//	int bits_per_pixel;
+//	int size_line;
+//	int endian;
+//
+//	img = mlx_get_data_addr (fdf.img_ptr, &bits_per_pixel, &size_line, &endian);
+//
+//	int **frame = (int**)ft_memalloc(sizeof(int*) * fdf.w_size.y);
+//
+////	int i = -1;
+//	i = -1;
+//	while (++i < fdf.w_size.y)
+//		frame[i] = (img + (size_line * i));
+//
+//	fdf.frame = frame;
+//	fdf.img = img;
+//
+//	fdf.mas = (t_vertex**)ft_memalloc(sizeof(t_vertex*) * fdf.map->rows);
 //	i = -1;
 //	while (++i < fdf.map->rows)
-//	{
-//		int j = -1;
-//		while (++j < fdf.map->cols)
-//		{
-//			mas[i][j].local.x = 10;
-//			ft_printf("(%f, %f)  ", mas[i][j].local.x, mas[i][j].local.y);
-//		}
-//		ft_printf("\n");
-//	}
-
-	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
-	mlx_loop(fdf.mlx_ptr);
-
-	return (0);
-}
+//		fdf.mas[i] = (t_vertex *) ft_memalloc(sizeof(t_vertex) * fdf.map->cols);
+//
+////	init_mas_local(fdf.mas, fdf.map);
+//
+//
+//
+//
+////	i = -1;
+////	while (++i < fdf.map->rows)
+////	{
+////		int j = -1;
+////		while (++j < fdf.map->cols)
+////		{
+////			mas[i][j].local.x = 10;
+////			ft_printf("(%f, %f)  ", mas[i][j].local.x, mas[i][j].local.y);
+////		}
+////		ft_printf("\n");
+////	}
+//
+//	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
+//	mlx_loop(fdf.mlx_ptr);
+//
+//	return (0);
+//}
 
 
 

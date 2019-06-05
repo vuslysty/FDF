@@ -1,7 +1,9 @@
 #ifndef FDF_GRAPHIC_H
 #define FDF_GRAPHIC_H
 
-//#include "fdf.h"
+#include "fdf.h"
+
+struct s_fdf		fdf;
 
 typedef struct		s_2d
 {
@@ -29,6 +31,36 @@ typedef struct		s_table
 	double			cos_table[256];
 }					t_table;
 
+typedef struct		s_poligon_2d
+{
+	struct s_2d		points[20];
+	int				points_count;
+	int				texture;
+}					t_poligon_2d;
+
+typedef struct		s_polygon
+{
+	int 			count;
+	int				*vertex;
+	int 			texture;
+	struct s_vertex	p;
+	struct s_vertex	m;
+	struct s_vertex	n;
+}					t_polygon;
+
+typedef struct		s_object
+{
+	int				vertex_count;
+	int 			polygon_count;
+	struct s_vertex	*vertex;
+	struct s_polygon	*polygon;
+	struct s_3d			scaling;
+	struct s_3d			position;
+	struct s_3d			angle;
+	int					need_update;
+}					t_object;
+
+
 void	matrix_copy(double src[4][4], double dst[4][4]);
 void	matrix_mult(double mtx1[4][4], double mtx2[4][4], double dst[4][4]);
 void	vec_mult_matrix(t_3d *src, double mtx[4][4], t_3d *dst);
@@ -36,6 +68,8 @@ void	tr_rotate(double matrix[4][4], int dx, int dy, int dz);
 void	matrix_identity(double mtx[4][4]);
 void	tr_translate(double matrix[4][4], double tx, double ty, double tz);
 void	tr_scale(double matrix[4][4], double sx, double sy, double sz);
+void	polygon_draw(t_poligon_2d *polygon);
+
 
 
 #endif //FDF_GRAPHIC_H
