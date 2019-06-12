@@ -10,14 +10,16 @@
 
 typedef struct			s_point
 {
-	int 				x;
-	int 				y;
-	int					z;
+	double 				x;
+	double 				y;
+	double				z;
 	int 				color;
 }						t_point;
 
 typedef struct			s_fdf
 {
+	struct s_3d				coord_sys[4];
+	struct s_3d				res_coord_sys[4];
 	struct s_matrixes	*matrixes;
 	struct s_transform_p *param;
 	struct s_map		*map;
@@ -88,7 +90,7 @@ typedef struct			s_transform_p
 	int				rz;
 }						t_transform_p;
 
-void		draw_line(t_point *a, t_point *b, t_fdf *fdf, int color);
+void		draw_line(t_point a, t_point b, t_fdf *fdf, int color);
 int			is_delimiter(char c);
 void		del_list_content(void *content, size_t tmp);
 void		read_fdf_map(char *file, t_map *map);
@@ -120,5 +122,9 @@ void	init_mas_local(struct s_vertex **mas, t_map *map);
 void	mult_local_by_glob_mtx(struct s_vertex **mas, t_map *map, double global[4][4]);
 void	mult_world_by_glob_mtx(struct s_vertex **mas, t_map *map, double global[4][4]);
 
+void	mult_local_by_glob_mtx_for_local(struct s_vertex **mas, t_map *map, double global[4][4]);
+
+
+void	line_clip_and_draw(t_point *a, t_point *b, t_fdf *fdf);
 
 #endif
