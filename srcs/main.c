@@ -64,7 +64,7 @@ void	draw_map(t_fdf *fdf, t_map *map)
 		{
 			if (x != map->cols - 1)
 			{
-				line_clip_and_draw(&map->rot[y][x], &map->rot[y][x + 1], fdf);
+				line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1], fdf);
 //				draw_gradient_line(&map->rot[y][x], &map->rot[y][x + 1], fdf,
 //						map->rot[y][x]);
 //					if (y != 0)
@@ -76,7 +76,7 @@ void	draw_map(t_fdf *fdf, t_map *map)
 			}
 			if (y != map->rows - 1)
 			{
-				line_clip_and_draw(&map->rot[y][x], &map->rot[y + 1][x], fdf);
+				line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x], fdf);
 //				draw_gradient_line(&map->rot[y][x], &map->rot[y + 1][x], fdf,
 //						map->rot[y][x]);
 			}
@@ -368,7 +368,7 @@ int main()
 	fdf.coord_sys[3].z = 100;
 
 	fdf.map = (t_map*)ft_memalloc(sizeof(t_map));
-	read_fdf_map("t2.fdf", fdf.map);
+	read_fdf_map("elem-fract.fdf", fdf.map);
 
 	int i;
 

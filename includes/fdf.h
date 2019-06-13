@@ -10,9 +10,9 @@
 
 typedef struct			s_point
 {
-	double 				x;
-	double 				y;
-	double				z;
+	int 				x;
+	int 				y;
+	int				z;
 	int 				color;
 }						t_point;
 
@@ -124,7 +124,9 @@ void	mult_world_by_glob_mtx(struct s_vertex **mas, t_map *map, double global[4][
 
 void	mult_local_by_glob_mtx_for_local(struct s_vertex **mas, t_map *map, double global[4][4]);
 
+void	line_clip_and_draw(t_point a, t_point b, t_fdf *fdf);
+//void	line_clip_and_draw(t_point *a, t_point *b, t_fdf *fdf);
+//void	draw_gradient_line(t_point a, t_point b, t_fdf *fdf, t_point curr);
 
-void	line_clip_and_draw(t_point *a, t_point *b, t_fdf *fdf);
 
 #endif
