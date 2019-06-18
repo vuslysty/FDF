@@ -12,12 +12,16 @@ typedef struct			s_point
 {
 	int 				x;
 	int 				y;
-	int				z;
+	int					z;
 	int 				color;
 }						t_point;
 
 typedef struct			s_fdf
 {
+	int	pol_count;
+	struct s_poligon_2d	*poligon;
+
+
 	struct s_3d				coord_sys[4];
 	struct s_3d				res_coord_sys[4];
 	struct s_matrixes	*matrixes;
@@ -128,5 +132,6 @@ void	line_clip_and_draw(t_point a, t_point b, t_fdf *fdf);
 //void	line_clip_and_draw(t_point *a, t_point *b, t_fdf *fdf);
 //void	draw_gradient_line(t_point a, t_point b, t_fdf *fdf, t_point curr);
 
+void	polygon_draw(t_poligon_2d *polygon, struct s_fdf *fdf);
 
 #endif

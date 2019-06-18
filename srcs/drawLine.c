@@ -107,17 +107,12 @@ void	draw_gradient_line(t_point *a, t_point *b, t_fdf *fdf, t_point curr)
 
 	init_values(&delta, &sign, a, b);
 	error = delta.x - delta.y;
-
-	if (b->x < fdf->w_size.x && b->x >= 0 && b->y < fdf->w_size.y && b->y >= 0)
-		put_pixel(fdf, b->x, b->y, b->color);
-//	mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, b->x, b->y, b->color);
+	put_pixel(fdf, b->x, b->y, b->color);
 	curr = *a;
 	while(curr.x != b->x || curr.y != b->y)
 	{
 		curr.color = get_color(curr, *a, *b, delta);
-		if (curr.x < fdf->w_size.x && curr.x >= 0 && curr.y < fdf->w_size.y && curr.y >= 0)
-			put_pixel(fdf, curr.x, curr.y, curr.color);
-//		mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, curr.x, curr.y, curr.color);
+		put_pixel(fdf, curr.x, curr.y, curr.color);
 		error2 = error * 2;
 		if(error2 > -delta.y)
 		{

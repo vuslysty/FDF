@@ -5,11 +5,39 @@
 #include "math.h"
 
 
+//void	fill_poligons(t_fdf *fdf)
+//{
+//	int i = 0;
+//	int x, y;
+//
+//	y = -1;
+//	while (++y < fdf->map->rows - 1)
+//	{
+//		x = -1;
+//		while (++x < fdf->map->cols - 1)
+//		{
+//			fdf->poligon[i].points[0].x = fdf->mas[y][x].world.x;
+//			fdf->poligon[i].points[0].y = fdf->mas[y][x].world.y;
+//
+//			fdf->poligon[i].points[1].x = fdf->mas[y + 1][x].world.x;
+//			fdf->poligon[i].points[1].y = fdf->mas[y + 1][x].world.y;
+//
+//			fdf->poligon[i].points[2].x = fdf->mas[y + 1][x + 1].world.x;
+//			fdf->poligon[i].points[2].y = fdf->mas[y + 1][x + 1].world.y;
+//
+//			fdf->poligon[i].points[3].x = fdf->mas[y][x + 1].world.x;
+//			fdf->poligon[i].points[3].y = fdf->mas[y][x + 1].world.y;
+//
+//			fdf->poligon[i++].points_count = 4;
+//		}
+//	}
+//}
+//
 //
 //int main()
 //{
 //	t_fdf	fdf;
-
+//
 //	fdf.w_size.x = 2000;
 //	fdf.w_size.y = 1200;
 //
@@ -37,45 +65,8 @@
 //	fdf.img = img;
 ///////////////////////////////////////
 //
-//	t_poligon_2d	poligon;
-//
-//	poligon.points[0].x = 0;
-//	poligon.points[0].y = 0;
-//
-//	poligon.points[1].x = 0;
-//	poligon.points[1].y = 500;
-//
-//	poligon.points[2].x = 100;
-//	poligon.points[2].y = 500;
-//
-//	poligon.points[3].x = 100;
-//	poligon.points[3].y = 0;
-//
-////	poligon.points[4].x = 100;
-////	poligon.points[4].y = 400;
-////
-////	poligon.points[5].x = 100;
-////	poligon.points[5].y = 0;
-//
-//	poligon.points_count = 4;
-//
-//	polygon_draw(&poligon);
-//
-//	poligon.points[0].x = 102;
-//	poligon.points[0].y = 500;
-//
-//	poligon.points[1].x = 102;
-//	poligon.points[1].y = 400;
-//
-//	poligon.points[2].x = 500;
-//	poligon.points[2].y = 400;
-//
-//	poligon.points[3].x = 500;
-//	poligon.points[3].y = 500;
-//
-//	polygon_draw(&poligon);
-//
-//	mlx_put_image_to_window(fdf.mlx_ptr, fdf.win_ptr, fdf.img_ptr, 0, 0);
+//	fdf.pol_count = (fdf.w_size.x - 1) * (fdf.w_size.y - 1);
+//	fdf.poligon = (t_poligon_2d*)ft_memalloc(sizeof(t_poligon_2d) * fdf.pol_count);
 //
 ///////////////////////////////////////
 //	mlx_loop(fdf.mlx_ptr);

@@ -77,7 +77,6 @@ void	tr_rotate(double matrix[4][4], int dx, int dy, int dz);
 void	matrix_identity(double mtx[4][4]);
 void	tr_translate(double matrix[4][4], double tx, double ty, double tz);
 void	tr_scale(double matrix[4][4], double sx, double sy, double sz);
-void	polygon_draw(t_poligon_2d *polygon);
 
 
 

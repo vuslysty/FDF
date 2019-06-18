@@ -4,7 +4,57 @@
 #include "fdf.h"
 #include "math.h"
 
-#define FOCAL_DISTANCE 80
+#define FOCAL_DISTANCE 200
+
+void	fill_poligons(t_fdf *fdf)
+{
+	int i = 0;
+	int x, y;
+
+	y = -1;
+	while (++y < fdf->map->rows - 1)
+	{
+		x = -1;
+		while (++x < fdf->map->cols - 1)
+		{
+			fdf->poligon[i].points[0].x = fdf->mas[y][x].world.x;
+			fdf->poligon[i].points[0].y = fdf->mas[y][x].world.y;
+
+			fdf->poligon[i].points[1].x = fdf->mas[y + 1][x].world.x;
+			fdf->poligon[i].points[1].y = fdf->mas[y + 1][x].world.y;
+
+			fdf->poligon[i].points[2].x = fdf->mas[y + 1][x + 1].world.x;
+			fdf->poligon[i].points[2].y = fdf->mas[y + 1][x + 1].world.y;
+
+			fdf->poligon[i].points[3].x = fdf->mas[y][x + 1].world.x;
+			fdf->poligon[i].points[3].y = fdf->mas[y][x + 1].world.y;
+
+			fdf->poligon[i].texture =
+//					fdf->map->bas[y][x].color;
+
+//			ft_printf("%x ", fdf->poligon[i].texture);
+
+					(((fdf->map->bas[y][x].color >> 16) +
+					(fdf->map->bas[y + 1][x].color >> 16) +
+					(fdf->map->bas[y][x + 1].color >> 16) +
+					(fdf->map->bas[y + 1][x + 1].color >> 16) / 4) << 16) |
+
+					(((fdf->map->bas[y][x].color >> 8 & 0xff) +
+					(fdf->map->bas[y + 1][x].color >> 8 & 0xff) +
+					(fdf->map->bas[y][x + 1].color >> 8 & 0xff) +
+					(fdf->map->bas[y + 1][x + 1].color >> 8 & 0xff) / 4) << 8) |
+
+					(((fdf->map->bas[y][x].color & 0xff) +
+					(fdf->map->bas[y + 1][x].color & 0xff) +
+					(fdf->map->bas[y][x + 1].color & 0xff) +
+					(fdf->map->bas[y + 1][x + 1].color & 0xff)) / 4);
+
+			fdf->poligon[i++].points_count = 4;
+		}
+//		ft_printf("\n");
+	}
+//	ft_printf("\n");
+}
 
 void	rotate(t_map *map, t_fdf *fdf)
 {
@@ -17,35 +67,20 @@ void	rotate(t_map *map, t_fdf *fdf)
 		x = -1;
 		while (++x < map->cols)
 		{
-//			fdf->matrixes->result_point->mtx[0][0] = map->bas[y][x].x * fdf->param->s_all;
-//			fdf->matrixes->result_point->mtx[0][1] = map->bas[y][x].y * fdf->param->s_all;
-//			fdf->matrixes->result_point->mtx[0][2] = map->bas[y][x].z * fdf->param->s_all;
-//			fdf->matrixes->result_point->mtx[0][3] = 1;
-//
-//			fdf->matrixes->result_point = mult_matrixes(fdf->matrixes->result_point, fdf->matrixes->base, 1);
-
 		  	map->rot[y][x].x = fdf->mas[y][x].world.x;
 			map->rot[y][x].y = fdf->mas[y][x].world.y;
 			map->rot[y][x].z = fdf->mas[y][x].world.z;
 
-
-
+//			map->rot[y][x].x = fdf->mas[y][x].aligned.x;
+//			map->rot[y][x].y = fdf->mas[y][x].aligned.y;
+//			map->rot[y][x].z = fdf->mas[y][x].aligned.z;
+//
+//
+//
 //			if(fdf->mas[y][x].aligned.z == 0)
 //				fdf->mas[y][x].aligned.z = 1;
-//			map->rot[y][x].x = FOCAL_DISTANCE * fdf->mas[y][x].aligned.x / fdf->mas[y][x].aligned.z;
-//			map->rot[y][x].y = FOCAL_DISTANCE * fdf->mas[y][x].aligned.y / fdf->mas[y][x].aligned.z;
-
-//			map->rot[y][x].x = (map->bas[y][x].x - map->cols / 2 * 5) * cos(dy) * cos(dz) +
-//					(map->bas[y][x].y - (map->rows / 2) * 5) * (sin(dx) * sin(dy) * cos(dz) + cos(dx) * sin(dz)) +
-//					map->bas[y][x].z * (-cos(dx) * sin(dy) * cos(dz) + sin(dx) * sin(dz));
-//			map->rot[y][x].y = -(map->bas[y][x].x - map->cols / 2 * 5) * cos(dy) * sin(dz) +
-//					(map->bas[y][x].y - (map->rows / 2) * 5) * (-sin(dx) * sin(dy) * sin(dz) + cos(dx) * cos(dz)) +
-//					map->bas[y][x].z * (cos(dx) * sin(dy) * sin(dz) + sin(dx) * cos(dz));
-//			map->rot[y][x].z = (map->bas[y][x].x - map->cols / 2 * 5) * sin(dy) -
-//					(map->bas[y][x].y - (map->rows / 2) * 5) * sin(dx) * cos(dy) +
-//					map->bas[y][x].z * cos(dx) * cos(dy);
-//			map->rot[y][x].x = map->rot[y][x].x + fdf->w_size.x / 2;
-//			map->rot[y][x].y = map->rot[y][x].y + fdf->w_size.y / 2;
+//			map->rot[y][x].x = FOCAL_DISTANCE * fdf->mas[y][x].aligned.x / fdf->mas[y][x].aligned.z + fdf->w_size.x / 2;
+//			map->rot[y][x].y = FOCAL_DISTANCE * fdf->mas[y][x].aligned.y / fdf->mas[y][x].aligned.z + fdf->w_size.y / 2;
 
 		}
 	}
@@ -93,29 +128,55 @@ int		key_hook(int kcode, void *data)
 	t_fdf			*fdf;
 	int 			i, j;
 
+	static int vx = 0, vy = 0, vz = 0;
+
 
 	int deg = 2;
 
 	fdf = (t_fdf*)data;
 
-	fdf->param->rx = 0;
-	fdf->param->ry = 0;
-	fdf->param->rz = 0;
-	fdf->param->s_all = 1;
+//	fdf->param->rx = 0;
+//	fdf->param->ry = 0;
+//	fdf->param->rz = 0;
+//	fdf->param->s_all = 1;
+
+//	if (kcode == 89 || kcode == 92)
+//		fdf->param->rx = kcode == 89 ? -deg : deg;
+//	else if (kcode == 86 || kcode == 88)
+//		fdf->param->ry = kcode == 86 ? -deg : deg;
+//	else if (kcode == 83 || kcode == 85)
+//		fdf->param->rz = kcode == 83 ? -deg : deg;
+//	else if (kcode == 123 || kcode == 124)
+//		fdf->param->tx += kcode == 123 ? -10 : 10;
+//	else if (kcode == 125 || kcode == 126)
+//		fdf->param->ty += kcode == 125 ? 10 : -10;
+//
+//	if (kcode == 27 || kcode == 24)
+//		fdf->param->s_all = kcode == 27 ? 0.9 : 1.1;
 
 	if (kcode == 89 || kcode == 92)
-		fdf->param->rx = kcode == 89 ? -deg : deg;
+		fdf->param->rx += kcode == 89 ? -deg : deg;
 	else if (kcode == 86 || kcode == 88)
-		fdf->param->ry = kcode == 86 ? -deg : deg;
+		fdf->param->ry += kcode == 86 ? -deg : deg;
 	else if (kcode == 83 || kcode == 85)
-		fdf->param->rz = kcode == 83 ? -deg : deg;
+		fdf->param->rz += kcode == 83 ? -deg : deg;
 	else if (kcode == 123 || kcode == 124)
-		fdf->param->tx += kcode == 123 ? -10 : 10;
+		fdf->param->tx += kcode == 123 ? -5 : 5;
 	else if (kcode == 125 || kcode == 126)
-		fdf->param->ty += kcode == 125 ? 10 : -10;
+		fdf->param->ty += kcode == 125 ? 5 : -5;
+	else if (kcode == 78 || kcode == 69)
+		fdf->param->tz += kcode == 78 ? -5 : 5;
+	else if (kcode == 27 || kcode == 24)
+		fdf->param->s_all += kcode == 27 ? -0.5 : 0.5;
 
-	if (kcode == 27 || kcode == 24)
-		fdf->param->s_all = kcode == 27 ? 0.9 : 1.1;
+	else if (kcode == 0 || kcode == 2)
+		vx += kcode == 0 ? -5 : 5;
+	else if(kcode == 1 || kcode == 13)
+		vy += kcode == 1 ? -5 : 5;
+	else if(kcode == 3 || kcode == 15)
+		vz += kcode == 3 ? -5 : 5;
+
+
 
 	//new *****
 
@@ -127,32 +188,32 @@ int		key_hook(int kcode, void *data)
 
 	matrix_identity(mtx_glob);
 
-//			tr_translate(mtx_glob, -(fdf->map->cols - 1) / 2, -(fdf->map->rows - 1) / 2, 0);
+	tr_translate(mtx_glob, -(fdf->map->cols - 1) / 2, -(fdf->map->rows - 1) / 2, -51);
 
 	tr_scale(mtx_glob, fdf->param->s_all, fdf->param->s_all, fdf->param->s_all);
 	tr_rotate(mtx_glob, fdf->param->rx, fdf->param->ry, fdf->param->rz);
-
 	tr_translate(mtx_glob, fdf->w_size.x / 2,
 			fdf->w_size.y / 2, 0);
-
 	tr_translate(mtx_glob, fdf->param->tx, fdf->param->ty,
 			fdf->param->tz);
 
 
-
-//	vec_mult_matrix(&fdf->coord_sys[0], mtx_glob, &fdf->res_coord_sys[0]);
-//	vec_mult_matrix(&fdf->coord_sys[1], mtx_glob, &fdf->res_coord_sys[1]);
-//	vec_mult_matrix(&fdf->coord_sys[2], mtx_glob, &fdf->res_coord_sys[2]);
-//	vec_mult_matrix(&fdf->coord_sys[3], mtx_glob, &fdf->res_coord_sys[3]);
-//
 	mult_local_by_glob_mtx(fdf->mas, fdf->map, mtx_glob);
+
+
+	fill_poligons(fdf);
+
+	i = -1;
+	while (++i < fdf->pol_count)
+		polygon_draw(&fdf->poligon[i], fdf);
+
 
 //	while (++i < fdf->map->rows)
 //	{
 //		int j = -1;
 //		while (++j < fdf->map->cols)
 //		{
-//			ft_printf("(%f, %f)  ", fdf->mas[i][j].world.x, fdf->mas[i][j].world.y);
+//			ft_printf("%f  ", fdf->mas[i][j].world.z);
 //		}
 //		ft_printf("\n");
 //	}
@@ -160,12 +221,11 @@ int		key_hook(int kcode, void *data)
 
 
 
-	tr_translate(mtx_glob, -fdf->param->tx, -fdf->param->ty,
-				 -fdf->param->tz);
-	tr_translate(mtx_glob, -fdf->w_size.x / 2,
-				 -fdf->w_size.y / 2, 0);
-
-	mult_local_by_glob_mtx_for_local(fdf->mas, fdf->map, mtx_glob);
+//	tr_translate(mtx_glob, -0, -0, -20);
+//	tr_translate(mtx_glob, -fdf->w_size.x / 2,
+//				 -fdf->w_size.y / 2, 0);
+//
+//	mult_local_by_glob_mtx_for_local(fdf->mas, fdf->map, mtx_glob);
 
 
 
@@ -173,21 +233,9 @@ int		key_hook(int kcode, void *data)
 
 //	matrix_identity(mtx_glob);
 
-//	tr_translate(mtx_glob, (fdf->map->cols - 1) / 2, (fdf->map->rows - 1) / 2,
-//			fdf->param->tz);
-
-//	i = -1;
-//	while (++i < 4)
-//	{
-//		j = -1;
-//		while (++j < 4)
-//			ft_printf("%f  ", mtx_glob[i][j]);
-//		ft_printf("\n");
-//	}
-//	ft_printf("\n");
 
 
-//	tr_translate(mtx_glob, -fdf->param->tx, -fdf->param->ty, -fdf->param->tz);
+//	tr_translate(mtx_glob, vx, vy, vz);
 //	tr_rotate(mtx_glob, -fdf->param->rx, -fdf->param->ry, -fdf->param->rz);
 //	tr_scale(mtx_glob, -fdf->param->s_all, -fdf->param->s_all, -fdf->param->s_all);
 
@@ -207,7 +255,7 @@ int		key_hook(int kcode, void *data)
 //		ft_printf("\n");
 //	}
 
-	rotate(fdf->map, fdf);
+//	rotate(fdf->map, fdf);
 
 
 	//end new *****
@@ -240,7 +288,7 @@ int		key_hook(int kcode, void *data)
 //	rotate(fdf->map, fdf);
 //
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
-	draw_map(fdf, fdf->map);
+//	draw_map(fdf, fdf->map);
 //
 //	t_point origin;
 //	t_point x;
@@ -347,6 +395,8 @@ int		key_hook(int kcode, void *data)
 //}
 
 
+
+
 int main()
 {
 	t_fdf	fdf;
@@ -415,14 +465,14 @@ int main()
 
 	init_mas_local(fdf.mas, fdf.map);
 
-	double mtx_glob[4][4];
+//	double mtx_glob[4][4];
+//
+//	matrix_identity(mtx_glob);
 
-	matrix_identity(mtx_glob);
+//	tr_translate(mtx_glob, -(fdf.map->cols - 1) / 2, -(fdf.map->rows - 1) / 2, 0);
+//	tr_scale(mtx_glob, 1, 1, 1);
 
-	tr_translate(mtx_glob, -(fdf.map->cols - 1) / 2, -(fdf.map->rows - 1) / 2, 0);
-	tr_scale(mtx_glob, 1, 1, 1);
-
-	mult_local_by_glob_mtx_for_local(fdf.mas, fdf.map, mtx_glob);
+//	mult_local_by_glob_mtx_for_local(fdf.mas, fdf.map, mtx_glob);
 
 
 
@@ -439,6 +489,9 @@ int main()
 //		}
 //		ft_printf("\n");
 //	}
+	fdf.pol_count = (fdf.w_size.x - 1) * (fdf.w_size.y - 1);
+	fdf.poligon = (t_poligon_2d*)ft_memalloc(sizeof(t_poligon_2d) * fdf.pol_count);
+
 
 	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
 	mlx_loop(fdf.mlx_ptr);
