@@ -21,6 +21,7 @@ typedef struct			s_fdf
 	int	pol_count;
 	struct s_poligon_2d	*poligon;
 
+	struct s_3d			corner[4];
 
 	struct s_3d				coord_sys[4];
 	struct s_3d				res_coord_sys[4];

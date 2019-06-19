@@ -109,6 +109,7 @@ void	draw_gradient_line(t_point *a, t_point *b, t_fdf *fdf, t_point curr)
 	error = delta.x - delta.y;
 	put_pixel(fdf, b->x, b->y, b->color);
 	curr = *a;
+//	curr.color = 0xffffff;
 	while(curr.x != b->x || curr.y != b->y)
 	{
 		curr.color = get_color(curr, *a, *b, delta);

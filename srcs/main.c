@@ -4,57 +4,62 @@
 #include "fdf.h"
 #include "math.h"
 
+#define L_UP 	fdf->corner[0].z
+#define L_DOWN	fdf->corner[2].z
+#define R_UP 	fdf->corner[1].z
+#define R_DOWN 	fdf->corner[3].z
+
 #define FOCAL_DISTANCE 200
 
-void	fill_poligons(t_fdf *fdf)
-{
-	int i = 0;
-	int x, y;
-
-	y = -1;
-	while (++y < fdf->map->rows - 1)
-	{
-		x = -1;
-		while (++x < fdf->map->cols - 1)
-		{
-			fdf->poligon[i].points[0].x = fdf->mas[y][x].world.x;
-			fdf->poligon[i].points[0].y = fdf->mas[y][x].world.y;
-
-			fdf->poligon[i].points[1].x = fdf->mas[y + 1][x].world.x;
-			fdf->poligon[i].points[1].y = fdf->mas[y + 1][x].world.y;
-
-			fdf->poligon[i].points[2].x = fdf->mas[y + 1][x + 1].world.x;
-			fdf->poligon[i].points[2].y = fdf->mas[y + 1][x + 1].world.y;
-
-			fdf->poligon[i].points[3].x = fdf->mas[y][x + 1].world.x;
-			fdf->poligon[i].points[3].y = fdf->mas[y][x + 1].world.y;
-
-			fdf->poligon[i].texture =
-//					fdf->map->bas[y][x].color;
-
-//			ft_printf("%x ", fdf->poligon[i].texture);
-
-					(((fdf->map->bas[y][x].color >> 16) +
-					(fdf->map->bas[y + 1][x].color >> 16) +
-					(fdf->map->bas[y][x + 1].color >> 16) +
-					(fdf->map->bas[y + 1][x + 1].color >> 16) / 4) << 16) |
-
-					(((fdf->map->bas[y][x].color >> 8 & 0xff) +
-					(fdf->map->bas[y + 1][x].color >> 8 & 0xff) +
-					(fdf->map->bas[y][x + 1].color >> 8 & 0xff) +
-					(fdf->map->bas[y + 1][x + 1].color >> 8 & 0xff) / 4) << 8) |
-
-					(((fdf->map->bas[y][x].color & 0xff) +
-					(fdf->map->bas[y + 1][x].color & 0xff) +
-					(fdf->map->bas[y][x + 1].color & 0xff) +
-					(fdf->map->bas[y + 1][x + 1].color & 0xff)) / 4);
-
-			fdf->poligon[i++].points_count = 4;
-		}
-//		ft_printf("\n");
-	}
-//	ft_printf("\n");
-}
+//void	fill_poligons(t_fdf *fdf)
+//{
+//	int i = 0;
+//	int x, y;
+//
+//	y = -1;
+//	while (++y < fdf->map->rows - 1)
+//	{
+//		x = -1;
+//		while (++x < fdf->map->cols - 1)
+//		{
+//			fdf->poligon[i].points[0].x = fdf->mas[y][x].world.x;
+//			fdf->poligon[i].points[0].y = fdf->mas[y][x].world.y;
+//
+//			fdf->poligon[i].points[1].x = fdf->mas[y + 1][x].world.x;
+//			fdf->poligon[i].points[1].y = fdf->mas[y + 1][x].world.y;
+//
+//			fdf->poligon[i].points[2].x = fdf->mas[y + 1][x + 1].world.x;
+//			fdf->poligon[i].points[2].y = fdf->mas[y + 1][x + 1].world.y;
+//
+//			fdf->poligon[i].points[3].x = fdf->mas[y][x + 1].world.x;
+//			fdf->poligon[i].points[3].y = fdf->mas[y][x + 1].world.y;
+//
+//			fdf->poligon[i].texture =
+////					fdf->map->bas[y][x].color;
+//
+////			ft_printf("%x ", fdf->poligon[i].texture);
+//
+//					(((fdf->map->bas[y][x].color >> 16) +
+//					(fdf->map->bas[y + 1][x].color >> 16) +
+//					(fdf->map->bas[y][x + 1].color >> 16) +
+//					(fdf->map->bas[y + 1][x + 1].color >> 16) / 4) << 16) |
+//
+//					(((fdf->map->bas[y][x].color >> 8 & 0xff) +
+//					(fdf->map->bas[y + 1][x].color >> 8 & 0xff) +
+//					(fdf->map->bas[y][x + 1].color >> 8 & 0xff) +
+//					(fdf->map->bas[y + 1][x + 1].color >> 8 & 0xff) / 4) << 8) |
+//
+//					(((fdf->map->bas[y][x].color & 0xff) +
+//					(fdf->map->bas[y + 1][x].color & 0xff) +
+//					(fdf->map->bas[y][x + 1].color & 0xff) +
+//					(fdf->map->bas[y + 1][x + 1].color & 0xff)) / 4);
+//
+//			fdf->poligon[i++].points_count = 4;
+//		}
+////		ft_printf("\n");
+//	}
+////	ft_printf("\n");
+//}
 
 void	rotate(t_map *map, t_fdf *fdf)
 {
@@ -86,42 +91,345 @@ void	rotate(t_map *map, t_fdf *fdf)
 	}
 }
 
+void	draw_map2(t_fdf *fdf, t_map *map)
+{
+	int y;
+	int x;
+	int d;
+
+	d = 0;
+
+	if (L_UP <= L_DOWN && L_UP <= R_DOWN && L_UP <= R_UP)
+		while (d < map->cols + map->rows)
+		{
+			x = d;
+			y = 0;
+			while (x >= 0 && y < map->rows)
+			{
+				if (x < map->cols && y < map->rows)
+				{
+					if (x != map->cols - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1], fdf);
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x], fdf);
+				}
+				x--;
+				y++;
+			}
+			d++;
+		}
+	else if (R_UP <= L_UP && R_UP <= R_DOWN && R_UP <= L_DOWN)
+	{
+		while (d < map->cols + map->rows)
+		{
+			x = map->cols - 1 - d;
+			y = 0;
+			while (x < map->cols && y < map->rows)
+			{
+				if (x >= 0 && y < map->rows)
+				{
+					if (x != 0)
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x - 1], fdf);
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x], fdf);
+				}
+				x++;
+				y++;
+			}
+			d++;
+		}
+	}
+	else if (L_DOWN <= L_UP && L_DOWN <= R_DOWN && L_DOWN <= R_UP)
+	{
+		while (d < map->cols + map->rows)
+		{
+			x = d;
+			y = map->rows - 1;
+			while (x >= 0 && y >= 0)
+			{
+				if (x < map->cols && y < map->rows)
+				{
+					if (x != map->cols - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1], fdf);
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x], fdf);
+				}
+				x--;
+				y--;
+			}
+			d++;
+		}
+	}
+	else
+	{
+		while (d < map->cols + map->rows)
+		{
+			x = map->cols - 1 - d;
+			y = map->rows - 1;
+			while (x < map->cols && y >= 0)
+			{
+				if (x >= 0 && y < map->rows)
+				{
+					if (x != map->cols - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1], fdf);
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x], fdf);
+				}
+				x++;
+				y--;
+			}
+			d++;
+		}
+	}
+
+}
+
+
 void	draw_map(t_fdf *fdf, t_map *map)
 {
 	int y;
 	int x;
 
-	y = -1;
-	while (++y < map->rows)
-	{
-		x = -1;
-		while (++x < map->cols)
-		{
-			if (x != map->cols - 1)
-			{
-				line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1], fdf);
-//				draw_gradient_line(&map->rot[y][x], &map->rot[y][x + 1], fdf,
-//						map->rot[y][x]);
-//					if (y != 0)
-//						draw_gradient_line(&map->rot[y][x], &map->rot[y - 1][x + 1], fdf,
-//										   map->rot[y][x]);
-//					if (y != map->rows - 1)
-//						draw_gradient_line(&map->rot[y][x], &map->rot[y + 1][x + 1], fdf,
-//										   map->rot[y][x]);
-			}
-			if (y != map->rows - 1)
-			{
-				line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x], fdf);
-//				draw_gradient_line(&map->rot[y][x], &map->rot[y + 1][x], fdf,
-//						map->rot[y][x]);
-			}
 
+	if (L_UP <= L_DOWN && L_UP <= R_DOWN && L_UP <= R_UP)
+	{
+		if (R_UP < L_DOWN)
+		{
+			y = -1;
+			while (++y < map->rows)
+			{
+				x = -1;
+				while (++x < map->cols)
+				{
+					if (x != map->cols - 1)
+					{
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1],
+										   fdf);
+//						if (y != 0)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y - 1][x + 1], fdf);
+//						if (y != map->rows - 1)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x + 1], fdf);
+					}
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x],
+										   fdf);
+				}
+			}
 		}
-//		ft_printf("\n");
+		else
+		{
+			x = -1;
+			while (++x < map->cols)
+			{
+				y = -1;
+				while (++y < map->rows)
+				{
+					if (x != map->cols - 1)
+					{
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1],
+										   fdf);
+//						if (y != 0)
+//							line_clip_and_draw(map->rot[y][x],
+//											   map->rot[y - 1][x + 1], fdf);
+//						if (y != map->rows - 1)
+//							line_clip_and_draw(map->rot[y][x],
+//											   map->rot[y + 1][x + 1], fdf);
+					}
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x],
+										   fdf);
+				}
+			}
+		}
 	}
-//	ft_printf("\n");
+
+
+
+
+
+	else if (L_DOWN <= L_UP && L_DOWN <= R_DOWN && L_DOWN <= R_UP)
+	{
+		if (L_UP < R_DOWN)
+		{
+			x = -1;
+			while (++x < map->cols)
+			{
+				y = map->rows;
+				while (--y >= 0)
+				{
+					if (x != map->cols - 1)
+					{
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1],
+										   fdf);
+//						if (y != 0)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y - 1][x + 1], fdf);
+//						if (y != map->rows - 1)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x + 1], fdf);
+					}
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x],
+										   fdf);
+				}
+			}
+		}
+		else
+		{
+			y = map->rows;
+			while (--y >= 0)
+			{
+				x = -1;
+				while (++x < map->cols)
+				{
+					if (x != map->cols - 1)
+					{
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1],
+										   fdf);
+//						if (y != 0)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y - 1][x + 1], fdf);
+//						if (y != map->rows - 1)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x + 1], fdf);
+					}
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x],
+										   fdf);
+				}
+			}
+		}
+	}
+
+	else if (R_UP <= L_UP && R_UP <= R_DOWN && R_UP <= L_DOWN)
+	{
+		if (L_UP < R_DOWN)
+		{
+			y = -1;
+			while (++y < map->rows)
+			{
+				x = map->cols;
+				while (--x >= 0)
+				{
+					if (x != map->cols - 1)
+					{
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1],
+										   fdf);
+//						if (y != 0)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y - 1][x + 1], fdf);
+//						if (y != map->rows - 1)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x + 1], fdf);
+					}
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x],
+										   fdf);
+				}
+			}
+		}
+		else
+		{
+			x = map->cols;
+			while (--x >= 0)
+			{
+				y = -1;
+				while (++y < map->rows)
+				{
+					if (x != map->cols - 1)
+					{
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1],
+										   fdf);
+//						if (y != 0)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y - 1][x + 1], fdf);
+//						if (y != map->rows - 1)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x + 1], fdf);
+					}
+
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x],
+										   fdf);
+				}
+			}
+		}
+	}
+
+//	if (R_DOWN <= L_UP && R_DOWN <= R_UP && R_DOWN <= L_DOWN)
+	else
+	{
+		if (L_DOWN < R_UP)
+		{
+			y = map->rows;
+			while (--y >= 0)
+			{
+				x = map->cols;
+				while (--x >= 0)
+				{
+					if (x != map->cols - 1)
+					{
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1],
+										   fdf);
+//						if (y != 0)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y - 1][x + 1], fdf);
+//						if (y != map->rows - 1)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x + 1], fdf);
+					}
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x],
+										   fdf);
+				}
+			}
+		}
+		else
+		{
+			x = map->cols;
+			while (--x >= 0)
+			{
+				y = map->rows;
+				while (--y >= 0)
+				{
+					if (x != map->cols - 1)
+					{
+						line_clip_and_draw(map->rot[y][x], map->rot[y][x + 1],
+										   fdf);
+//						if (y != 0)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y - 1][x + 1], fdf);
+//						if (y != map->rows - 1)
+//							line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x + 1], fdf);
+					}
+					if (y != map->rows - 1)
+						line_clip_and_draw(map->rot[y][x], map->rot[y + 1][x],
+										   fdf);
+				}
+			}
+		}
+	}
+
+
+
+
+
 }
 
+
+void	get_corners(t_fdf *fdf, double mtx[4][4])
+{
+	t_3d tmp;
+
+	ft_bzero(&tmp, sizeof(tmp));
+	tmp.x = fdf->map->bas[0][0].x;
+	tmp.y = fdf->map->bas[0][0].y;
+	vec_mult_matrix(&tmp, mtx, &fdf->corner[0]);
+
+	ft_bzero(&tmp, sizeof(tmp));
+	tmp.x = fdf->map->bas[0][fdf->map->cols - 1].x;
+	tmp.y = fdf->map->bas[0][fdf->map->cols - 1].y;
+	vec_mult_matrix(&tmp, mtx, &fdf->corner[1]);
+
+	ft_bzero(&tmp, sizeof(tmp));
+	tmp.x = fdf->map->bas[fdf->map->rows - 1][0].x;
+	tmp.y = fdf->map->bas[fdf->map->rows - 1][0].y;
+	vec_mult_matrix(&tmp, mtx, &fdf->corner[2]);
+
+	ft_bzero(&tmp, sizeof(tmp));
+	tmp.x = fdf->map->bas[fdf->map->rows - 1][fdf->map->cols - 1].x;
+	tmp.y = fdf->map->bas[fdf->map->rows - 1][fdf->map->cols - 1].y;
+	vec_mult_matrix(&tmp, mtx, &fdf->corner[3]);
+}
 
 int		key_hook(int kcode, void *data)
 {
@@ -188,7 +496,7 @@ int		key_hook(int kcode, void *data)
 
 	matrix_identity(mtx_glob);
 
-	tr_translate(mtx_glob, -(fdf->map->cols - 1) / 2, -(fdf->map->rows - 1) / 2, -51);
+	tr_translate(mtx_glob, -(fdf->map->cols - 1) / 2, -(fdf->map->rows - 1) / 2, 0);
 
 	tr_scale(mtx_glob, fdf->param->s_all, fdf->param->s_all, fdf->param->s_all);
 	tr_rotate(mtx_glob, fdf->param->rx, fdf->param->ry, fdf->param->rz);
@@ -200,12 +508,14 @@ int		key_hook(int kcode, void *data)
 
 	mult_local_by_glob_mtx(fdf->mas, fdf->map, mtx_glob);
 
+	get_corners(fdf, mtx_glob);
 
-	fill_poligons(fdf);
 
-	i = -1;
-	while (++i < fdf->pol_count)
-		polygon_draw(&fdf->poligon[i], fdf);
+//	fill_poligons(fdf);
+
+//	i = -1;
+//	while (++i < fdf->pol_count)
+//		polygon_draw(&fdf->poligon[i], fdf);
 
 
 //	while (++i < fdf->map->rows)
@@ -255,7 +565,7 @@ int		key_hook(int kcode, void *data)
 //		ft_printf("\n");
 //	}
 
-//	rotate(fdf->map, fdf);
+	rotate(fdf->map, fdf);
 
 
 	//end new *****
@@ -289,6 +599,7 @@ int		key_hook(int kcode, void *data)
 //
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
 //	draw_map(fdf, fdf->map);
+	draw_map2(fdf, fdf->map);
 //
 //	t_point origin;
 //	t_point x;
@@ -418,7 +729,9 @@ int main()
 	fdf.coord_sys[3].z = 100;
 
 	fdf.map = (t_map*)ft_memalloc(sizeof(t_map));
-	read_fdf_map("elem-fract.fdf", fdf.map);
+//	read_fdf_map("test_maps/42.fdf", fdf.map);
+	read_fdf_map("t2.fdf", fdf.map);
+//	read_fdf_map("elem-fract.fdf", fdf.map);
 
 	int i;
 
@@ -489,8 +802,8 @@ int main()
 //		}
 //		ft_printf("\n");
 //	}
-	fdf.pol_count = (fdf.w_size.x - 1) * (fdf.w_size.y - 1);
-	fdf.poligon = (t_poligon_2d*)ft_memalloc(sizeof(t_poligon_2d) * fdf.pol_count);
+//	fdf.pol_count = (fdf.w_size.x - 1) * (fdf.w_size.y - 1);
+//	fdf.poligon = (t_poligon_2d*)ft_memalloc(sizeof(t_poligon_2d) * fdf.pol_count);
 
 
 	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
