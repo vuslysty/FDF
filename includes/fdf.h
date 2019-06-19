@@ -16,8 +16,17 @@ typedef struct			s_point
 	int 				color;
 }						t_point;
 
+typedef struct			s_dline
+{
+	struct s_2d			a;
+	struct s_2d			b;
+	struct s_dline		*next;
+}						t_dline;
+
 typedef struct			s_fdf
 {
+	struct s_dline		*dline[4];
+
 	int	pol_count;
 	struct s_poligon_2d	*poligon;
 

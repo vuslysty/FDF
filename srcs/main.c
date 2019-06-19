@@ -469,11 +469,11 @@ int		key_hook(int kcode, void *data)
 	else if (kcode == 83 || kcode == 85)
 		fdf->param->rz += kcode == 83 ? -deg : deg;
 	else if (kcode == 123 || kcode == 124)
-		fdf->param->tx += kcode == 123 ? -5 : 5;
+		fdf->param->tx += kcode == 123 ? -15 : 15;
 	else if (kcode == 125 || kcode == 126)
-		fdf->param->ty += kcode == 125 ? 5 : -5;
+		fdf->param->ty += kcode == 125 ? 15 : -15;
 	else if (kcode == 78 || kcode == 69)
-		fdf->param->tz += kcode == 78 ? -5 : 5;
+		fdf->param->tz += kcode == 78 ? -15 : 15;
 	else if (kcode == 27 || kcode == 24)
 		fdf->param->s_all += kcode == 27 ? -0.5 : 0.5;
 
@@ -496,7 +496,7 @@ int		key_hook(int kcode, void *data)
 
 	matrix_identity(mtx_glob);
 
-	tr_translate(mtx_glob, -(fdf->map->cols - 1) / 2, -(fdf->map->rows - 1) / 2, 0);
+	tr_translate(mtx_glob, -(fdf->map->cols - 1) / 2, -(fdf->map->rows - 1) / 2, -51);
 
 	tr_scale(mtx_glob, fdf->param->s_all, fdf->param->s_all, fdf->param->s_all);
 	tr_rotate(mtx_glob, fdf->param->rx, fdf->param->ry, fdf->param->rz);
@@ -730,8 +730,8 @@ int main()
 
 	fdf.map = (t_map*)ft_memalloc(sizeof(t_map));
 //	read_fdf_map("test_maps/42.fdf", fdf.map);
-	read_fdf_map("t2.fdf", fdf.map);
-//	read_fdf_map("elem-fract.fdf", fdf.map);
+//	read_fdf_map("t2.fdf", fdf.map);
+	read_fdf_map("elem-fract.fdf", fdf.map);
 
 	int i;
 
