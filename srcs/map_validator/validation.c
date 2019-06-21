@@ -24,7 +24,7 @@ static int		get_mas_len(char **mas)
 	return (i);
 }
 
-static void		get_z_and_color(t_point *point, char *str)
+static void		get_z_and_color(t_point *point, char *str, t_map *map)
 {
 	char	**tmp;
 	int		mas_len;
@@ -34,7 +34,15 @@ static void		get_z_and_color(t_point *point, char *str)
 	if (mas_len > 2)
 		ft_error("Format error!\n");
 	point->z = ft_get_number(tmp[0]);
-	point->color = (mas_len == 1) ? 0xFFFFFF : ft_get_number(tmp[1]);
+	if (point->z < map->min_z)
+		map->min_z = point->z;
+	if (point->z > map->max_z)
+		map->max_z = point->z;
+	if (mas_len != 1)
+	{
+		point->color = ft_get_number(tmp[1]);
+		map->color = 1;
+	}
 	del_list_content(tmp, 0);
 }
 
@@ -58,7 +66,7 @@ static t_point	**get_map(t_list *list, t_map *map)
 		tmp = (char**)list->content;
 		while (++j < map->cols)
 		{
-			get_z_and_color(&mas[i][j], tmp[j]);
+			get_z_and_color(&mas[i][j], tmp[j], map);
 			mas[i][j].y = i;
 			mas[i][j].x = j;
 		}

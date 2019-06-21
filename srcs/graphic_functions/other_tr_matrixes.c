@@ -1,4 +1,5 @@
 #include "graphic.h"
+#include <math.h>
 
 void	matrix_identity(double mtx[4][4])
 {

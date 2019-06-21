@@ -7,6 +7,12 @@
 # include "libft.h"
 # include "math.h"
 # include "graphic.h"
+#include <pthread.h>
+
+enum e_projection
+		{
+			ORTO, CAVALIE, CABINE, TRIMETRIC, DIMETRIC, ISOMETRIC
+		};
 
 typedef struct			s_point
 {
@@ -16,26 +22,42 @@ typedef struct			s_point
 	int 				color;
 }						t_point;
 
+typedef struct			s_mthread
+{
+	int 				d;
+	int					count;
+	int					thread_index;
+	pthread_t			curr_thread;
+}						t_mthread;
+
 typedef struct			s_dline
 {
-	struct s_2d			a;
-	struct s_2d			b;
+	struct s_point		a;
+	struct s_point		b;
 	struct s_dline		*next;
 }						t_dline;
 
+typedef struct			s_transform_p
+{
+	int 				color;
+	double				tx;
+	double 				ty;
+	double 				tz;
+	double 				sx;
+	double 				sy;
+	double 				sz;
+	double				s_all;
+	int				rx;
+	int				ry;
+	int				rz;
+}						t_transform_p;
+
 typedef struct			s_fdf
 {
-	struct s_dline		*dline[4];
-
-	int	pol_count;
-	struct s_poligon_2d	*poligon;
-
+	pthread_t 			t[4];
+	enum e_projection	projection;
 	struct s_3d			corner[4];
-
-	struct s_3d				coord_sys[4];
-	struct s_3d				res_coord_sys[4];
-	struct s_matrixes	*matrixes;
-	struct s_transform_p *param;
+	struct s_transform_p param;
 	struct s_map		*map;
 	struct s_point		w_size;
 	void				*mlx_ptr;
@@ -43,10 +65,7 @@ typedef struct			s_fdf
 	void				*img_ptr;
 	int 				**frame;
 	char 				*img;
-
-
 	struct s_vertex		**mas;
-
 }						t_fdf;
 
 typedef struct			s_map
@@ -55,15 +74,10 @@ typedef struct			s_map
 	struct s_point		**bas;
 	int 				cols;
 	int 				rows;
-	int 				deep;
+	int					min_z;
+	int					max_z;
+	int 				color;
 }						t_map;
-//
-//typedef struct			s_map
-//{
-//	struct s_3d			**map;
-//	int 				cols;
-//	int 				rows;
-//}						t_map;
 
 typedef struct			s_matrix
 {
@@ -87,29 +101,16 @@ typedef struct			s_matrixes
 	struct s_matrix 	*result_point;
 }						t_matrixes;
 
-typedef struct			s_transform_p
-{
-	double				tx;
-	double 				ty;
-	double 				tz;
-	double 				sx;
-	double 				sy;
-	double 				sz;
-	double				s_all;
-	int 				shx;
-	int 				shy;
-	int 				shz;
-	int				rx;
-	int				ry;
-	int				rz;
-}						t_transform_p;
-
+void	*draw_map(void *param);
+void	draw_line_3d(t_3d a, t_3d b, t_fdf *fdf, int color);
 void		draw_line(t_point a, t_point b, t_fdf *fdf, int color);
 int			is_delimiter(char c);
 void		del_list_content(void *content, size_t tmp);
 void		read_fdf_map(char *file, t_map *map);
 int			get_color(t_point current, t_point start, t_point end, t_point delta);
 void		draw_gradient_line(t_point *a, t_point *b, t_fdf *fdf, t_point curr);
+void	draw_white_line(t_point *a, t_point *b, t_fdf *fdf, t_point curr);
+void	draw_color_line(t_point *a, t_point *b, t_fdf *fdf, t_point curr);
 t_point		**get_copy_base_map(t_map *map);
 t_matrix	*mult_matrixes(t_matrix *m1, t_matrix *m2, int opt);
 void		*mult_matrixes_arg(t_matrix *m1, t_matrix *m2, t_matrix *m3);
@@ -143,5 +144,10 @@ void	line_clip_and_draw(t_point a, t_point b, t_fdf *fdf);
 //void	draw_gradient_line(t_point a, t_point b, t_fdf *fdf, t_point curr);
 
 void	polygon_draw(t_poligon_2d *polygon, struct s_fdf *fdf);
+
+void	add_new_line(t_dline **list, t_point *a, t_point *b);
+void	del_dline_list(t_dline **list);
+
+void	get_projection(t_fdf *fdf, double mtx[4][4]);
 
 #endif

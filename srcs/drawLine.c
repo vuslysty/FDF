@@ -64,6 +64,7 @@ void	init_values(t_point *delta, t_point *sign, t_point *a, t_point *b)
 //	}
 //}
 
+
 //void	draw_gradient_line(t_point a, t_point b, t_fdf *fdf, t_point curr)
 //{
 //	t_point	delta;
@@ -97,6 +98,62 @@ void	init_values(t_point *delta, t_point *sign, t_point *a, t_point *b)
 //		}
 //	}
 //}
+
+void	draw_color_line(t_point *a, t_point *b, t_fdf *fdf, t_point curr)
+{
+	t_point	delta;
+	t_point sign;
+	int		error;
+	int		error2;
+
+	init_values(&delta, &sign, a, b);
+	error = delta.x - delta.y;
+	put_pixel(fdf, b->x, b->y, a->color);
+	curr = *a;
+	while(curr.x != b->x || curr.y != b->y)
+	{
+		put_pixel(fdf, curr.x, curr.y, a->color);
+		error2 = error * 2;
+		if(error2 > -delta.y)
+		{
+			error -= delta.y;
+			curr.x += sign.x;
+		}
+		if(error2 < delta.x)
+		{
+			error += delta.x;
+			curr.y += sign.y;
+		}
+	}
+}
+
+void	draw_white_line(t_point *a, t_point *b, t_fdf *fdf, t_point curr)
+{
+	t_point	delta;
+	t_point sign;
+	int		error;
+	int		error2;
+
+	init_values(&delta, &sign, a, b);
+	error = delta.x - delta.y;
+	put_pixel(fdf, b->x, b->y, 0xffffff);
+	curr = *a;
+	while(curr.x != b->x || curr.y != b->y)
+	{
+		put_pixel(fdf, curr.x, curr.y, 0xffffff);
+		error2 = error * 2;
+		if(error2 > -delta.y)
+		{
+			error -= delta.y;
+			curr.x += sign.x;
+		}
+		if(error2 < delta.x)
+		{
+			error += delta.x;
+			curr.y += sign.y;
+		}
+	}
+}
 
 void	draw_gradient_line(t_point *a, t_point *b, t_fdf *fdf, t_point curr)
 {

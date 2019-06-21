@@ -99,6 +99,13 @@ void	line_clip_and_draw(t_point a, t_point b, t_fdf *fdf)
 			set_point_to_new(&a, &b, fdf, &lclip);
 		}
 	}
-	if (lclip.accept)
-		draw_gradient_line(&a, &b, fdf, a);
+	if (lclip.accept && fdf->param.color)
+	{
+		if (a.color != b.color)
+			draw_gradient_line(&a, &b, fdf, a);
+		else
+			draw_color_line(&a, &b, fdf, a);
+	}
+	if (lclip.accept && !fdf->param.color)
+		draw_white_line(&a, &b, fdf, a);
 }

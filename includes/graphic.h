@@ -73,11 +73,12 @@ void	matrix_copy(double src[4][4], double dst[4][4]);
 void	matrix_mult(double mtx1[4][4], double mtx2[4][4], double dst[4][4]);
 void	vec_mult_matrix(t_3d *src, double mtx[4][4], t_3d *dst);
 void	tr_rotate(double matrix[4][4], int dx, int dy, int dz);
+void	tr_rotate2(double matrix[4][4], double dx, double dy);
 //void	tr_rotate(double matrix[4][4], int dx, int dy, int dz, int kcode);
 void	matrix_identity(double mtx[4][4]);
 void	tr_translate(double matrix[4][4], double tx, double ty, double tz);
 void	tr_scale(double matrix[4][4], double sx, double sy, double sz);
 
-
+void	cavalie(double matrix[4][4]);
 
 #endif //FDF_GRAPHIC_H
