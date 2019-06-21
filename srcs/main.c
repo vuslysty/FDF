@@ -120,7 +120,7 @@ void	start_trasformation(t_fdf *fdf)
 
 	matrix_identity(mtx_glob);
 	tr_translate(mtx_glob, -(fdf->map->cols - 1) / 2,
-			-(fdf->map->rows - 1) / 2, 0);
+			-(fdf->map->rows - 1) / 2, -(fdf->map->max_z + fdf->map->min_z) / 2);
 	tr_scale(mtx_glob, fdf->param.s_all, fdf->param.s_all,
 			fdf->param.s_all);
 	tr_rotate(mtx_glob, fdf->param.rx, fdf->param.ry, fdf->param.rz);
@@ -170,14 +170,31 @@ void	add_color_to_white_map(t_map *map)
 {
 	int x;
 	int y;
+	t_point start;
+	t_point end;
+	t_point curr;
+	t_point delta;
 
+	start.x = map->min_z;
+	start.y = 0;
+	start.color = 0x00ff00;
+
+	end.x = map->max_z;
+	end.y = 0;
+	end.color = 0xff0000;
+
+	delta.x = map->max_z - map->min_z;
+	delta.y = 0;
+
+	curr.y = 0;
 	y = -1;
-	while (++y < map->rows - 1)
+	while (++y < map->rows)
 	{
 		x = -1;
-		while (++x < map->cols - 1)
+		while (++x < map->cols)
 		{
-			map->bas[y][x].color = get_color()
+			curr.x = map->bas[y][x].z;
+			map->bas[y][x].color = get_color(curr, start, end, delta);
 		}
 	}
 }
@@ -195,10 +212,11 @@ int main()
 	fdf.map->max_z = INT32_MIN;
 
 	read_fdf_map("test_maps/42.fdf", fdf.map);
-//	read_fdf_map("julia.fdf", fdf.map);
+//	read_fdf_map("t2.fdf", fdf.map);
 //	read_fdf_map("mars.fdf", fdf.map);
 
-
+	if (!fdf.map->color)
+		add_color_to_white_map(fdf.map);
 
 	int i;
 
