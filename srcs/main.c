@@ -3,18 +3,10 @@
 #include "mlx.h" // man /usr/share/man/man3/
 #include "fdf.h"
 #include "math.h"
-
-#include <sys/time.h>
-
 #define L_UP 	fdf->corner[0].z
 #define L_DOWN	fdf->corner[2].z
 #define R_UP 	fdf->corner[1].z
 #define R_DOWN 	fdf->corner[3].z
-
-float timedifference_msec(struct timeval t0, struct timeval t1)
-{
-	return (t1.tv_sec - t0.tv_sec) * 1000.0f + (t1.tv_usec - t0.tv_usec) / 1000.0f;
-}
 
 void	init_res_map(t_map *map, t_fdf *fdf)
 {
@@ -42,17 +34,14 @@ void	get_corners(t_fdf *fdf, double mtx[4][4])
 	tmp.x = fdf->map->bas[0][0].x;
 	tmp.y = fdf->map->bas[0][0].y;
 	vec_mult_matrix(&tmp, mtx, &fdf->corner[0]);
-
 	ft_bzero(&tmp, sizeof(tmp));
 	tmp.x = fdf->map->bas[0][fdf->map->cols - 1].x;
 	tmp.y = fdf->map->bas[0][fdf->map->cols - 1].y;
 	vec_mult_matrix(&tmp, mtx, &fdf->corner[1]);
-
 	ft_bzero(&tmp, sizeof(tmp));
 	tmp.x = fdf->map->bas[fdf->map->rows - 1][0].x;
 	tmp.y = fdf->map->bas[fdf->map->rows - 1][0].y;
 	vec_mult_matrix(&tmp, mtx, &fdf->corner[2]);
-
 	ft_bzero(&tmp, sizeof(tmp));
 	tmp.x = fdf->map->bas[fdf->map->rows - 1][fdf->map->cols - 1].x;
 	tmp.y = fdf->map->bas[fdf->map->rows - 1][fdf->map->cols - 1].y;
@@ -61,7 +50,7 @@ void	get_corners(t_fdf *fdf, double mtx[4][4])
 
 void	set_projection(int kcode, t_fdf *fdf)
 {
-	if (kcode == 32)
+	if (kcode == 31)
 		fdf->projection = ORTO;
 	else if (kcode == 8)
 		fdf->projection = CAVALIE;
@@ -91,12 +80,12 @@ void	set_param(int kcode, t_fdf *fdf)
 		fdf->param.s_all -= 0.5;
 	else if (kcode == 24 && fdf->param.s_all < 1000)
 		fdf->param.s_all += 0.5;
-
 	else if (kcode == 122)
 		fdf->param.color = 0;
 	else if (kcode == 120)
 		fdf->param.color = 1;
-
+	else if (kcode == 3)
+		fdf->param.fps = fdf->param.fps == 1 ? 0 : 1;
 	set_projection(kcode, fdf);
 }
 
@@ -138,30 +127,17 @@ void	start_trasformation(t_fdf *fdf)
 int		key_hook(int kcode, void *data)
 {
 	t_fdf			*fdf;
-
-	struct timeval t0;
-	struct timeval t1;
-	float elapsed;
-
-	gettimeofday(&t0, 0);
-
+	t_fps			fps;
 
 	fdf = (t_fdf*)data;
+	start_fps(&fps, fdf);
 	set_param(kcode, fdf);
 	start_trasformation(fdf);
 	threads_computing(fdf);
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img.img_ptr, 0, 0);
-
-
 	ft_bzero(fdf->img.img, fdf->img.size_line * fdf->w_size.y);
-
-
-	gettimeofday(&t1, 0);
-	elapsed = 1000.0 / timedifference_msec(t0, t1);
-
-
-	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 20, 0xFF0000, ft_itoa((int)elapsed));
+	end_fps(&fps, fdf);
 	return (0);
 }
 
@@ -247,11 +223,6 @@ int main(int argc, char **argv)
 	mlx_loop(fdf.mlx_ptr);
 	return (0);
 }
-
-
-
-// 359 degrees = 6,26573 radian
-// 1   degrees = 0,0174533 rad
 
 
 

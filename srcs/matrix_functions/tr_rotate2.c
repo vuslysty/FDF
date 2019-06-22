@@ -34,5 +34,4 @@ void			tr_rotate2(double matrix[4][4], double dx, double dy)
 
 	rot_y(matrix, mtx_tmp1, dy);
 	rot_x(mtx_tmp1, matrix, dx);
-//	matrix_mult(mtx_tmp2, mtx_z, matrix);
 }
