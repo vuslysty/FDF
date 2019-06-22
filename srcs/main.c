@@ -120,7 +120,8 @@ void	start_trasformation(t_fdf *fdf)
 
 	matrix_identity(mtx_glob);
 	tr_translate(mtx_glob, -(fdf->map->cols - 1) / 2,
-			-(fdf->map->rows - 1) / 2, -(fdf->map->max_z + fdf->map->min_z) / 2);
+			-(fdf->map->rows - 1) / 2,
+			-(fdf->map->max_z + fdf->map->min_z) / 2);
 	tr_scale(mtx_glob, fdf->param.s_all, fdf->param.s_all,
 			fdf->param.s_all);
 	tr_rotate(mtx_glob, fdf->param.rx, fdf->param.ry, fdf->param.rz);
@@ -142,34 +143,32 @@ int		key_hook(int kcode, void *data)
 	struct timeval t1;
 	float elapsed;
 
-
 	gettimeofday(&t0, 0);
+
+
 	fdf = (t_fdf*)data;
-
 	set_param(kcode, fdf);
-
 	start_trasformation(fdf);
-
-
 	threads_computing(fdf);
-
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
-	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img_ptr, 0, 0);
-	ft_bzero(fdf->img, 8000 * fdf->w_size.y);
+	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img.img_ptr, 0, 0);
+
+
+	ft_bzero(fdf->img.img, fdf->img.size_line * fdf->w_size.y);
+
 
 	gettimeofday(&t1, 0);
 	elapsed = 1000.0 / timedifference_msec(t0, t1);
 
-	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 20, 0xFF0000, ft_itoa((int)elapsed));
 
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 20, 0xFF0000, ft_itoa((int)elapsed));
 	return (0);
 }
 
 
 void	add_color_to_white_map(t_map *map)
 {
-	int x;
-	int y;
+	t_2d p;
 	t_point start;
 	t_point end;
 	t_point curr;
@@ -178,94 +177,74 @@ void	add_color_to_white_map(t_map *map)
 	start.x = map->min_z;
 	start.y = 0;
 	start.color = 0x00ff00;
-
 	end.x = map->max_z;
 	end.y = 0;
 	end.color = 0xff0000;
-
 	delta.x = map->max_z - map->min_z;
 	delta.y = 0;
-
 	curr.y = 0;
-	y = -1;
-	while (++y < map->rows)
+	p.y = -1;
+	while (++p.y < map->rows)
 	{
-		x = -1;
-		while (++x < map->cols)
+		p.x = -1;
+		while (++p.x < map->cols)
 		{
-			curr.x = map->bas[y][x].z;
-			map->bas[y][x].color = get_color(curr, start, end, delta);
+			curr.x = map->bas[p.y][p.x].z;
+			map->bas[p.y][p.x].color = get_color(curr, start, end, delta);
 		}
 	}
 }
 
+void	init_window_and_image(t_fdf *fdf)
+{
+	int i;
 
-int main()
+	fdf->w_size.x = 2000;
+	fdf->w_size.y = 1200;
+	fdf->mlx_ptr = mlx_init();
+	fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, fdf->w_size.x,
+								 fdf->w_size.y, "FDF");
+	fdf->img.img_ptr = mlx_new_image(fdf->mlx_ptr, fdf->w_size.x,
+			fdf->w_size.y);
+	fdf->img.img = mlx_get_data_addr (fdf->img.img_ptr,
+			&fdf->img.bits_per_pixel, &fdf->img.size_line, &fdf->img.endian);
+	fdf->img.frame = (int**)ft_memalloc(sizeof(int*) * fdf->w_size.y);
+	i = -1;
+	while (++i < fdf->w_size.y)
+		fdf->img.frame[i] = (int*)(fdf->img.img + (fdf->img.size_line * i));
+}
+
+void	first_init(char *filename, t_fdf *fdf)
+{
+	int 	i;
+
+	ft_bzero(fdf, sizeof(t_fdf));
+	fdf->map = (t_map*)ft_memalloc(sizeof(t_map));
+	fdf->map->min_z = INT32_MAX;
+	fdf->map->max_z = INT32_MIN;
+	read_fdf_map(filename, fdf->map);
+	if (!fdf->map->color)
+		add_color_to_white_map(fdf->map);
+	fdf->param.s_all = 1;
+	fdf->map->rot = get_copy_base_map(fdf->map);
+	init_window_and_image(fdf);
+	fdf->mas = (t_vertex**)ft_memalloc(sizeof(t_vertex*) * fdf->map->rows);
+	i = -1;
+	while (++i < fdf->map->rows)
+		fdf->mas[i] = (t_vertex*)ft_memalloc(sizeof(t_vertex) * fdf->map->cols);
+	init_mas_local(fdf->mas, fdf->map);
+	fdf->projection = ORTO;
+}
+
+int main(int argc, char **argv)
 {
 	t_fdf	fdf;
 
-	ft_bzero(&fdf, sizeof(fdf));
-
-	fdf.map = (t_map*)ft_memalloc(sizeof(t_map));
-
-	fdf.map->min_z = INT32_MAX;
-	fdf.map->max_z = INT32_MIN;
-
-	read_fdf_map("test_maps/42.fdf", fdf.map);
-//	read_fdf_map("t2.fdf", fdf.map);
-//	read_fdf_map("mars.fdf", fdf.map);
-
-	if (!fdf.map->color)
-		add_color_to_white_map(fdf.map);
-
-	int i;
-
-	fdf.param.s_all = 1;
-
-
-	fdf.map->rot = get_copy_base_map(fdf.map);
-
-	fdf.w_size.x = 2000;
-	fdf.w_size.y = 1200;
-
-	fdf.mlx_ptr = mlx_init();
-	fdf.win_ptr = mlx_new_window(fdf.mlx_ptr, fdf.w_size.x,
-								 fdf.w_size.y, "mlx 42");
-
-	fdf.img_ptr = mlx_new_image(fdf.mlx_ptr, fdf.w_size.x, fdf.w_size.y);
-
-	char *img;
-
-	int bits_per_pixel;
-	int size_line;
-	int endian;
-
-	img = mlx_get_data_addr (fdf.img_ptr, &bits_per_pixel, &size_line, &endian);
-
-	int **frame = (int**)ft_memalloc(sizeof(int*) * fdf.w_size.y);
-
-	i = -1;
-	while (++i < fdf.w_size.y)
-		frame[i] = (int*)(img + (size_line * i));
-
-	fdf.frame = frame;
-	fdf.img = img;
-
-	fdf.mas = (t_vertex**)ft_memalloc(sizeof(t_vertex*) * fdf.map->rows);
-	i = -1;
-	while (++i < fdf.map->rows)
-		fdf.mas[i] = (t_vertex *) ft_memalloc(sizeof(t_vertex) * fdf.map->cols);
-
-
-
-	init_mas_local(fdf.mas, fdf.map);
-
-
-	fdf.projection = ORTO;
-
+	if (argc != 2)
+		ft_error("usage:  ./fdf [filename]\n");
+	first_init(argv[1], &fdf);
 	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
 	mlx_loop(fdf.mlx_ptr);
-
 	return (0);
 }
 

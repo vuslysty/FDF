@@ -14,6 +14,17 @@ enum e_projection
 			ORTO, CAVALIE, CABINE, TRIMETRIC, DIMETRIC, ISOMETRIC
 		};
 
+typedef struct			s_image
+{
+	void				*img_ptr;
+	int 				**frame;
+	char				*img;
+	int					bits_per_pixel;
+	int					size_line;
+	int					endian;
+
+}						t_image;
+
 typedef struct			s_point
 {
 	int 				x;
@@ -54,6 +65,7 @@ typedef struct			s_transform_p
 
 typedef struct			s_fdf
 {
+	struct s_image		img;
 	pthread_t 			t[4];
 	enum e_projection	projection;
 	struct s_3d			corner[4];
@@ -62,9 +74,6 @@ typedef struct			s_fdf
 	struct s_point		w_size;
 	void				*mlx_ptr;
 	void				*win_ptr;
-	void				*img_ptr;
-	int 				**frame;
-	char 				*img;
 	struct s_vertex		**mas;
 }						t_fdf;
 

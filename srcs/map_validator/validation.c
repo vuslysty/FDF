@@ -2,6 +2,19 @@
 #include "fdf.h"
 #include "libft.h"
 
+static int		ft_count_char(char *str, char c)
+{
+	int		i = 0;
+
+	while (*str != '\0')
+	{
+		if (*str == c)
+			i++;
+		str++;
+	}
+	return (i);
+}
+
 static int		get_file_descriptor(char *file)
 {
 	int		fd;
@@ -27,23 +40,30 @@ static int		get_mas_len(char **mas)
 static void		get_z_and_color(t_point *point, char *str, t_map *map)
 {
 	char	**tmp;
-	int		mas_len;
+	int		count;
 
+	count = ft_count_char(str, ',');
 	tmp = ft_strsplit(str, ',');
-	mas_len = get_mas_len(tmp);
-	if (mas_len > 2)
-		ft_error("Format error!\n");
-	point->z = ft_get_number(tmp[0]);
-	if (point->z < map->min_z)
-		map->min_z = point->z;
-	if (point->z > map->max_z)
-		map->max_z = point->z;
-	if (mas_len != 1)
-	{
-		point->color = ft_get_number(tmp[1]);
-		map->color = 1;
-	}
-	del_list_content(tmp, 0);
+	if (count == 1 || count == 0)
+		if ((get_mas_len(tmp) == 2 && count == 1) ||
+			(get_mas_len(tmp) == 1 && count == 0))
+		{
+			point->z = ft_get_number(tmp[0]);
+			if (point->z < map->min_z)
+				map->min_z = point->z;
+			if (point->z > map->max_z)
+				map->max_z = point->z;
+			if (count == 1)
+			{
+				point->color = ft_get_number(tmp[1]);
+				map->color = 1;
+			}
+			else
+				point->color = 0xffffff;
+			del_list_content(tmp, 0);
+			return ;
+		}
+	ft_error("Format error!\n");
 }
 
 static t_point	**get_map(t_list *list, t_map *map)
