@@ -2,19 +2,19 @@
 #include "mlx.h"
 #include <sys/time.h>
 
-float timedifference_msec(struct timeval t0, struct timeval t1)
+static float	timedifference_msec(struct timeval t0, struct timeval t1)
 {
 	return (t1.tv_sec - t0.tv_sec) * 1000.0f + (t1.tv_usec - t0.tv_usec) /
 											   1000.0f;
 }
 
-void	start_fps(t_fps *fps, t_fdf *fdf)
+void			start_fps(t_fps *fps, t_fdf *fdf)
 {
 	if (fdf->param.fps)
 		gettimeofday(&fps->t0, 0);
 }
 
-void	end_fps(t_fps *fps, t_fdf *fdf)
+void			end_fps(t_fps *fps, t_fdf *fdf)
 {
 	char	*time;
 

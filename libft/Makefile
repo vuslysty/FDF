@@ -83,6 +83,7 @@ SRCS = ./srcs/ft_atoi.c\
 		./srcs/ft_is_whitespace.c\
 		./srcs/ft_strtolower.c\
 		./srcs/ft_strsplitf.c\
+		./srcs/ft_count_char.c\
 		./srcs/ft_printf/add_0_for_numstr.c\
 		./srcs/ft_printf/b_options.c\
 		./srcs/ft_printf/bigintsum_toa.c\

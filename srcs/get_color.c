@@ -1,6 +1,6 @@
 #include "fdf.h"
 
-double percent(int start, int end, int current)
+static double	percent(int start, int end, int current)
 {
 	double placement;
 	double distance;
@@ -10,12 +10,13 @@ double percent(int start, int end, int current)
 	return ((distance == 0) ? 1.0 : (placement / distance));
 }
 
-int get_light(int start, int end, double percentage)
+int				get_light(int start, int end, double percentage)
 {
 	return ((int)((1 - percentage) * start + percentage * end));
 }
 
-int get_color(t_point current, t_point start, t_point end, t_point delta)
+int				get_color(t_point current, t_point start, t_point end,
+		t_point delta)
 {
 	int     red;
 	int     green;

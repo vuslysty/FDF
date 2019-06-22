@@ -49,6 +49,5 @@ void				tr_translate(double matrix[4][4], double tx, double ty,
 		double tz);
 void				tr_scale(double matrix[4][4], double sx, double sy,
 		double sz);
-void				cavalie(double matrix[4][4]);
 
 #endif

@@ -2,19 +2,6 @@
 #include "fdf.h"
 #include "libft.h"
 
-static int		ft_count_char(char *str, char c)
-{
-	int		i = 0;
-
-	while (*str != '\0')
-	{
-		if (*str == c)
-			i++;
-		str++;
-	}
-	return (i);
-}
-
 static int		get_file_descriptor(char *file)
 {
 	int		fd;
@@ -95,7 +82,7 @@ static t_point	**get_map(t_list *list, t_map *map)
 	return (mas);
 }
 
-void	read_fdf_map(char *file, t_map *map)
+void			read_fdf_map(char *file, t_map *map)
 {
 	char	*line;
 	char	**mas;

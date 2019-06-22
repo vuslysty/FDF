@@ -116,5 +116,6 @@ int						ft_get_number(char *str);
 int						ft_is_whitespace(char c);
 void					ft_strtolower(char *str);
 char					**ft_strsplitf(char const *s, int (*f)(char));
+int						ft_count_char(char *str, char c);
 
 #endif

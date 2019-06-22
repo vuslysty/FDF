@@ -48,6 +48,12 @@ void	get_corners(t_fdf *fdf, double mtx[4][4])
 	vec_mult_matrix(&tmp, mtx, &fdf->corner[3]);
 }
 
+int		close_fdf(void *param)
+{
+	(void)param;
+	exit(0);
+}
+
 void	set_projection(int kcode, t_fdf *fdf)
 {
 	if (kcode == 31)
@@ -86,6 +92,10 @@ void	set_param(int kcode, t_fdf *fdf)
 		fdf->param.color = 1;
 	else if (kcode == 3)
 		fdf->param.fps = fdf->param.fps == 1 ? 0 : 1;
+	else if (kcode == 53)
+		close_fdf((void*)0);
+	else if (kcode == 4)
+		fdf->param.help = fdf->param.help == 1 ? 0 : 1;
 	set_projection(kcode, fdf);
 }
 
@@ -124,6 +134,33 @@ void	start_trasformation(t_fdf *fdf)
 	init_res_map(fdf->map, fdf);
 }
 
+void	get_help(t_fdf *fdf)
+{
+	static char	*help =
+			"ROTATE:\n"
+   "x-asix  -  7 | 9\n"
+   "y-asix  -  4 | 6\n"
+   "x-asix  -  1 | 3\n";
+
+	
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 20, 0x00FF00, help);
+}
+
+void	do_operations(t_fdf *fdf)
+{
+	ft_bzero(fdf->img.img, fdf->img.size_line * fdf->w_size.y);
+	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
+	start_trasformation(fdf);
+	threads_computing(fdf);
+	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img.img_ptr, 0, 0);
+	if (fdf->param.help)
+	{
+		mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->help.img_ptr,
+								0, 0);
+		get_help(fdf);
+	}
+}
+
 int		key_hook(int kcode, void *data)
 {
 	t_fdf			*fdf;
@@ -132,11 +169,7 @@ int		key_hook(int kcode, void *data)
 	fdf = (t_fdf*)data;
 	start_fps(&fps, fdf);
 	set_param(kcode, fdf);
-	start_trasformation(fdf);
-	threads_computing(fdf);
-	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
-	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img.img_ptr, 0, 0);
-	ft_bzero(fdf->img.img, fdf->img.size_line * fdf->w_size.y);
+	do_operations(fdf);
 	end_fps(&fps, fdf);
 	return (0);
 }
@@ -171,6 +204,78 @@ void	add_color_to_white_map(t_map *map)
 	}
 }
 
+void	init_help(t_fdf *fdf)
+{
+	int i;
+
+	fdf->help.img_ptr = mlx_new_image(fdf->mlx_ptr, fdf->w_size.x,
+									 fdf->w_size.y);
+	fdf->help.img = mlx_get_data_addr (fdf->help.img_ptr,
+									  &fdf->help.bits_per_pixel, &fdf->help.size_line, &fdf->help.endian);
+	fdf->help.frame = (int**)ft_memalloc(sizeof(int*) * fdf->w_size.y);
+	i = -1;
+	while (++i < fdf->w_size.y)
+		fdf->help.frame[i] = (int*)(fdf->help.img + (fdf->help.size_line * i));
+
+	t_point rainbow[8];
+
+	rainbow[0].x = 0;
+	rainbow[0].y = 0;
+	rainbow[0].color = 0x00ff0000;
+
+	rainbow[1].x = 285;
+	rainbow[1].y = 0;
+	rainbow[1].color = 0x00ffdd00;
+
+	rainbow[2].x = 570;
+	rainbow[2].y = 0;
+	rainbow[2].color = 0x0021ff00;
+
+	rainbow[3].x = 855;
+	rainbow[3].y = 0;
+	rainbow[3].color = 0x0000fffa;
+
+	rainbow[4].x = 1140;
+	rainbow[4].y = 0;
+	rainbow[4].color = 0x00000cff;
+
+	rainbow[5].x = 1425;
+	rainbow[5].y = 0;
+	rainbow[5].color = 0x00c300ff;
+
+	rainbow[6].x = 1710;
+	rainbow[6].y = 0;
+	rainbow[6].color = 0x00c300ff;
+
+	rainbow[7].x = 1999;
+	rainbow[7].y = 0;
+	rainbow[7].color = 0x00ff0000;
+
+
+
+
+	int y = -1;
+	while (++y < fdf->w_size.y)
+	{
+		draw_gradient_line_h(rainbow[0], rainbow[1], fdf, rainbow[0]);
+		draw_gradient_line_h(rainbow[1], rainbow[2], fdf, rainbow[0]);
+		draw_gradient_line_h(rainbow[2], rainbow[3], fdf, rainbow[0]);
+		draw_gradient_line_h(rainbow[3], rainbow[4], fdf, rainbow[0]);
+		draw_gradient_line_h(rainbow[4], rainbow[5], fdf, rainbow[0]);
+		draw_gradient_line_h(rainbow[5], rainbow[6], fdf, rainbow[0]);
+		draw_gradient_line_h(rainbow[6], rainbow[7], fdf, rainbow[0]);
+
+		rainbow[0].y++;
+		rainbow[1].y++;
+		rainbow[2].y++;
+		rainbow[3].y++;
+		rainbow[4].y++;
+		rainbow[5].y++;
+		rainbow[6].y++;
+		rainbow[7].y++;
+	}
+}
+
 void	init_window_and_image(t_fdf *fdf)
 {
 	int i;
@@ -188,6 +293,7 @@ void	init_window_and_image(t_fdf *fdf)
 	i = -1;
 	while (++i < fdf->w_size.y)
 		fdf->img.frame[i] = (int*)(fdf->img.img + (fdf->img.size_line * i));
+	init_help(fdf);
 }
 
 void	first_init(char *filename, t_fdf *fdf)
@@ -220,6 +326,8 @@ int main(int argc, char **argv)
 		ft_error("usage:  ./fdf [filename]\n");
 	first_init(argv[1], &fdf);
 	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
+	mlx_hook(fdf.win_ptr, 17, 0, close_fdf, &fdf);
+
 	mlx_loop(fdf.mlx_ptr);
 	return (0);
 }

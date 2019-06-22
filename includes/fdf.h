@@ -9,7 +9,7 @@
 # include "graphic.h"
 #include <pthread.h>
 
-enum e_projection
+enum					e_projection
 		{
 			ORTO, CAVALIE, CABINE, TRIMETRIC, DIMETRIC, ISOMETRIC
 		};
@@ -47,8 +47,9 @@ typedef struct			s_mthread
 	pthread_t			curr_thread;
 }						t_mthread;
 
-struct					s_transf_p
+struct					s_param
 {
+	int					help;
 	int					fps;
 	int 				color;
 	double				tx;
@@ -62,11 +63,12 @@ struct					s_transf_p
 
 typedef struct			s_fdf
 {
+	struct s_image		help;
 	struct s_image		img;
 	pthread_t 			t[4];
 	enum e_projection	projection;
 	struct s_3d			corner[4];
-	struct s_transf_p	param;
+	struct s_param		param;
 	struct s_map		*map;
 	struct s_point		w_size;
 	void				*mlx_ptr;
@@ -93,6 +95,8 @@ int						get_color(t_point current, t_point start, t_point end,
 		t_point delta);
 void					draw_gradient_line(t_point *a, t_point *b, t_fdf *fdf,
 		t_point curr);
+void					draw_gradient_line_h(t_point a, t_point b, t_fdf *fdf,
+										   t_point curr);
 void					draw_white_line(t_point *a, t_point *b, t_fdf *fdf,
 		t_point curr);
 void					draw_color_line(t_point *a, t_point *b, t_fdf *fdf,
