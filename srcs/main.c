@@ -72,7 +72,7 @@ int				main(int argc, char **argv)
 	t_fdf	fdf;
 
 	if (argc != 2)
-		ft_error("usage:  ./fdf [filename]\n");
+		ft_error("usage:  ./fdf [filename]");
 	first_init(argv[1], &fdf);
 	do_operations(&fdf);
 	mlx_string_put(fdf.mlx_ptr, fdf.win_ptr, 920, 50, 0x00FF00,
