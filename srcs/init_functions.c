@@ -100,9 +100,9 @@ void		set_param(int kcode, t_fdf *fdf)
 		fdf->param.tx += kcode == 123 ? -15 : 15;
 	else if (kcode == 125 || kcode == 126)
 		fdf->param.ty += kcode == 125 ? 15 : -15;
-	else if (kcode == 27 && fdf->param.s_all > 0)
+	else if (kcode == 78 && fdf->param.s_all > 0)
 		fdf->param.s_all -= 0.5;
-	else if (kcode == 24 && fdf->param.s_all < 1000)
+	else if (kcode == 69 && fdf->param.s_all < 1000)
 		fdf->param.s_all += 0.5;
 	else if (kcode == 122)
 		fdf->param.color = 0;

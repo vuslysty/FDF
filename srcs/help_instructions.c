@@ -61,7 +61,7 @@ void	projection_instructions(t_fdf *fdf)
 void	rotate_instructions(t_fdf *fdf)
 {
 	static char	*help[4] = {
-			"ROTATE:",
+			"ROTATE (NUMPAD):",
 			"x-asix  -  7 | 9",
 			"y-asix  -  4 | 6",
 			"z-asix  -  1 | 3"
@@ -76,7 +76,7 @@ void	rotate_instructions(t_fdf *fdf)
 void	scale_instructions(t_fdf *fdf)
 {
 	static char	*help[3] = {
-			"SCALE:",
+			"SCALE (NUMPAD):",
 			"Zoom in  |  +",
 			"Zoom out |  -"
 	};

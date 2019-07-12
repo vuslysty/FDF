@@ -121,15 +121,15 @@ OBJS = $(SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
+	@echo "Building of $(NAME)..."
 	@ar rc $(NAME) $(OBJS)
 	@ranlib $(NAME)
 
 %.o: %.c
-	@gcc $(FLAGS) -I./includes -o $@ -c $<
+	gcc $(FLAGS) -I./includes -o $@ -c $<
 
 clean:
-	@rm -f srcs/$(OBJS)
-	@rm -f srcs/ft_printf/$(OBJS)
+	@rm -f $(OBJS)
 
 fclean: clean
 	@rm -f $(NAME)

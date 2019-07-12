@@ -75,6 +75,8 @@ int				main(int argc, char **argv)
 		ft_error("usage:  ./fdf [filename]\n");
 	first_init(argv[1], &fdf);
 	do_operations(&fdf);
+	mlx_string_put(fdf.mlx_ptr, fdf.win_ptr, 920, 50, 0x00FF00,
+			"PRESS \'H\' TO HELP");
 	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
 	mlx_hook(fdf.win_ptr, 17, 0, close_fdf, &fdf);
 	mlx_loop(fdf.mlx_ptr);

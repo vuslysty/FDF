@@ -94,7 +94,15 @@ void		do_operations(t_fdf *fdf)
 	ft_bzero(fdf->img.img, fdf->img.size_line * fdf->w_size.y);
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
 	start_trasformation(fdf);
-	threads_computing(fdf);
+	if (fdf->map->rows == 1 && fdf->map->cols == 1)
+		if (fdf->param.color)
+			fdf->img.frame[fdf->map->rot[0][0].y][fdf->map->rot[0][0].x] =
+					fdf->map->bas[0][0].color;
+		else
+			fdf->img.frame[fdf->map->rot[0][0].y][fdf->map->rot[0][0].x] =
+					0xffffff;
+	else
+		threads_computing(fdf);
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img.img_ptr, 0, 0);
 	if (fdf->param.help)
 	{

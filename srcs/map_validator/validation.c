@@ -20,9 +20,9 @@ static int		get_file_descriptor(char *file)
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		ft_error("Error. The file is not exist!\n");
+		ft_error("Error. The file is not exist!");
 	if ((read(fd, 0, 0)) == -1)
-		ft_error(" Error. You tried open directory! Error!\n");
+		ft_error(" Error. You tried open directory! Error!");
 	return (fd);
 }
 
@@ -62,7 +62,7 @@ static void		get_z_and_color(t_point *point, char *str, t_map *map)
 			del_list_content(tmp, 0);
 			return ;
 		}
-	ft_error("Format error!\n");
+	ft_error("Format error!");
 }
 
 static t_point	**get_map(t_list *list, t_map *map)
@@ -73,14 +73,14 @@ static t_point	**get_map(t_list *list, t_map *map)
 	char	**tmp;
 
 	if (map->rows == 1 && map->cols == 0)
-		ft_error("No data input!\n");
+		ft_error("No data input!");
 	if (!(mas = (t_point**)ft_memalloc(sizeof(t_point*) * map->rows)))
-		ft_error("Memory allocation error!\n");
+		ft_error("Memory allocation error!");
 	i = -1;
 	while (++i < map->rows)
 	{
 		if (!(mas[i] = (t_point*)ft_memalloc(sizeof(t_point) * map->cols)))
-			ft_error("Memory allocation error!\n");
+			ft_error("Memory allocation error!");
 		j = -1;
 		tmp = (char**)list->content;
 		while (++j < map->cols)
@@ -112,7 +112,7 @@ void			read_fdf_map(char *file, t_map *map)
 	{
 		mas = ft_strsplitf(line, is_delimiter);
 		if (map->cols != get_mas_len(mas))
-			ft_error("Found wrong line length. Exiting.\n");
+			ft_error("Found wrong line length. Exiting.");
 		ft_lstadd_end(&list, ft_lstnew(mas, 0));
 		free(line);
 	}
