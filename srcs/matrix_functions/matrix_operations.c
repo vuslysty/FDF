@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   matrix_operations.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 16:37:02 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/07/12 16:37:03 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "graphic.h"
-# define SIN(x) sin_table[ABS((int)x&255)]
-# define COS(x) cos_table[ABS((int)x&255)]
+#define SIN(x) sin_table[ABS((int)x&255)]
+#define COS(x) cos_table[ABS((int)x&255)]
 
 void	matrix_copy(double src[4][4], double dst[4][4])
 {
@@ -48,4 +60,3 @@ void	vec_mult_matrix(t_3d *src, double mtx[4][4], t_3d *dst)
 			src->y * mtx[1][2] +
 			src->z * mtx[2][2] + mtx[3][2];
 }
-

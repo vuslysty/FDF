@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   line_clip_and_draw.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 16:59:04 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/07/12 16:59:05 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
 #define INSIDE 0
@@ -27,7 +39,8 @@ void			compute_clip_point(t_point *a, t_point *b, t_fdf *fdf,
 {
 	if (cl->out & TOP)
 	{
-		cl->x = a->x + (b->x - a->x) * (double)(fdf->w_size.y - 1 - a->y) / (b->y - a->y);
+		cl->x = a->x + (b->x - a->x) * (double)(fdf->w_size.y - 1 - a->y) /
+				(b->y - a->y);
 		cl->y = fdf->w_size.y - 1;
 	}
 	else if (cl->out & BOTTOM)
@@ -37,7 +50,8 @@ void			compute_clip_point(t_point *a, t_point *b, t_fdf *fdf,
 	}
 	else if (cl->out & RIGHT)
 	{
-		cl->y = a->y + (b->y - a->y) * (double)(fdf->w_size.x - 1 - a->x) / (b->x - a->x);
+		cl->y = a->y + (b->y - a->y) * (double)(fdf->w_size.x - 1 - a->x) /
+				(b->x - a->x);
 		cl->x = fdf->w_size.x - 1;
 	}
 	else if (cl->out & LEFT)
@@ -48,10 +62,10 @@ void			compute_clip_point(t_point *a, t_point *b, t_fdf *fdf,
 }
 
 void			set_point_to_new(t_point *a, t_point *b, t_fdf *fdf,
-								 t_clipping *cl)
+							t_clipping *cl)
 {
-	t_point	new_p;
-	t_point	delta;
+	t_point		new_p;
+	t_point		delta;
 
 	delta.x = ABS(b->x - a->x);
 	delta.y = ABS(b->y - a->y);
@@ -78,13 +92,12 @@ void			init_lclip(t_point *a, t_point *b, t_fdf *fdf, t_clipping *cl)
 	cl->code1 = compute_out_code(b, fdf);
 }
 
-void	line_clip_and_draw(t_point a, t_point b, t_fdf *fdf)
+void			line_clip_and_draw(t_point a, t_point b, t_fdf *fdf)
 {
 	t_clipping	lclip;
 
 	init_lclip(&a, &b, fdf, &lclip);
 	while (1)
-	{
 		if (!(lclip.code0 | lclip.code1))
 		{
 			lclip.accept = 1;
@@ -98,13 +111,10 @@ void	line_clip_and_draw(t_point a, t_point b, t_fdf *fdf)
 			compute_clip_point(&a, &b, fdf, &lclip);
 			set_point_to_new(&a, &b, fdf, &lclip);
 		}
-	}
 	if (lclip.accept && fdf->param.color)
 	{
-		if (a.color != b.color)
-			draw_gradient_line(&a, &b, fdf, a);
-		else
-			draw_color_line(&a, &b, fdf, a);
+		a.color != b.color ? draw_gradient_line(&a, &b, fdf, a) :
+		draw_color_line(&a, &b, fdf, a);
 	}
 	if (lclip.accept && !fdf->param.color)
 		draw_white_line(&a, &b, fdf, a);

@@ -1,5 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw_map.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 16:42:37 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/07/12 16:42:38 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
-#include "mlx.h" // man /usr/share/man/man3/
+#include "mlx.h"
 #include "fdf.h"
 #include "math.h"
 
@@ -128,14 +140,13 @@ void	draw_from_right_down(t_fdf *fdf, t_mthread *mth, int x, int y)
 
 void	*draw_map(void *param)
 {
-	t_fdf *fdf = (t_fdf*)param;
-
+	t_fdf		*fdf;
 	t_mthread	mthread;
 
+	fdf = (t_fdf*)param;
 	mthread.count = -1;
 	mthread.curr_thread = pthread_self();
 	mthread.d = -1;
-
 	if (L_UP <= L_DOWN && L_UP <= R_DOWN && L_UP <= R_UP)
 		draw_from_left_up(fdf, &mthread, 0, 0);
 	else if (R_UP <= L_UP && R_UP <= R_DOWN && R_UP <= L_DOWN)

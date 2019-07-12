@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tr_rotate.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 16:39:48 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/07/12 16:39:49 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "graphic.h"
 #include "libft.h"
 #include "math.h"
@@ -73,22 +85,3 @@ void			tr_rotate(double matrix[4][4], int dx, int dy, int dz)
 	rot_x(table, mtx_tmp1, mtx_tmp2, dx);
 	rot_z(table, mtx_tmp2, matrix, dz);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_color.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 16:52:11 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/07/12 16:52:12 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
 static double	percent(int start, int end, int current)
@@ -18,10 +30,10 @@ int				get_light(int start, int end, double percentage)
 int				get_color(t_point current, t_point start, t_point end,
 		t_point delta)
 {
-	int     red;
-	int     green;
-	int     blue;
-	double  percentage;
+	int		red;
+	int		green;
+	int		blue;
+	double	percentage;
 
 	if (current.color == end.color)
 		return (current.color);

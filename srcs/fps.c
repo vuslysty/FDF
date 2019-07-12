@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fps.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 16:49:55 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/07/12 16:49:57 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 #include "mlx.h"
 #include <sys/time.h>
@@ -5,7 +17,7 @@
 static float	timedifference_msec(struct timeval t0, struct timeval t1)
 {
 	return (t1.tv_sec - t0.tv_sec) * 1000.0f + (t1.tv_usec - t0.tv_usec) /
-											   1000.0f;
+	1000.0f;
 }
 
 void			start_fps(t_fps *fps, t_fdf *fdf)

@@ -1,8 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   validation.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 16:36:09 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/07/12 16:36:10 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <fcntl.h>
 #include "fdf.h"
 #include "libft.h"
-
-#define MAS_LEN get_mas_len(tmp)
 
 static int		get_file_descriptor(char *file)
 {
@@ -28,30 +38,6 @@ static int		get_mas_len(char **mas)
 
 static void		get_z_and_color(t_point *point, char *str, t_map *map)
 {
-//	char	**tmp;
-//	int		count;
-//
-//	count = ft_count_char(str, ',');
-//	tmp = ft_strsplit(str, ',');
-//	if (count == 1 || count == 0)
-//		if ((MAS_LEN == 2 && count == 1) || (MAS_LEN == 1 && count == 0))
-//		{
-//			point->z = ft_get_number(tmp[0]);
-////			point->z > 1000 ? point->z = 1000 : 0;
-//			point->z >= map->min_z ? map->min_z = point->z : 0;
-//			point->z > map->max_z ? map->max_z = point->z : 0;
-//			if (count == 1)
-//			{
-//				point->color = ft_get_number(tmp[1]);
-//				map->color = 1;
-//			}
-//			else
-//				point->color = 0xffffff;
-//			del_list_content(tmp, 0);
-//			return ;
-//		}
-//	ft_error("Format error!\n");
-
 	char	**tmp;
 	int		count;
 

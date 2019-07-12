@@ -1,5 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   graphic.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 17:19:25 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/07/12 17:19:34 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FDF_GRAPHIC_H
-#define FDF_GRAPHIC_H
+# define FDF_GRAPHIC_H
 
 typedef int			t_out_code;
 
@@ -10,20 +22,20 @@ typedef struct		s_ln_clipping
 	t_out_code		out;
 	double			x;
 	double			y;
-	int 			accept;
+	int				accept;
 }					t_clipping;
 
 typedef struct		s_2d
 {
-	int 			x;
-	int 			y;
+	int				x;
+	int				y;
 }					t_2d;
 
 typedef struct		s_3d
 {
-	double 			x;
-	double 			y;
-	double 			z;
+	double			x;
+	double			y;
+	double			z;
 }					t_3d;
 
 typedef struct		s_vertex

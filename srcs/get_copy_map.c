@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_copy_map.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vuslysty <vuslysty@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 16:52:59 by vuslysty          #+#    #+#             */
+/*   Updated: 2019/07/12 16:53:00 by vuslysty         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
 t_point		**get_copy_base_map(t_map *map)
 {
 	t_point	**copy;
 	int		i;
-	int 	j;
+	int		j;
 
 	copy = (t_point**)ft_memalloc(sizeof(t_point*) * map->rows);
 	i = -1;
