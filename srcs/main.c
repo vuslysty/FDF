@@ -134,16 +134,113 @@ void	start_trasformation(t_fdf *fdf)
 	init_res_map(fdf->map, fdf);
 }
 
+void	fps_instructions(t_fdf *fdf)
+{
+	static char	*help[2] = {
+			"FPS (ON/OFF):",
+			"Key F"
+	};
+
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 400, 0x00FF00, help[0]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 420, 0x00FF00, help[1]);
+}
+
+void	color_instructions(t_fdf *fdf)
+{
+	static char	*help[] = {
+			"COLOR:",
+			"Key F1  -  OFF",
+			"Key F2  -  ON"
+	};
+
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 700, 0x00FF00, help[0]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 720, 0x00FF00, help[1]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 740, 0x00FF00, help[2]);
+}
+
+void	projection_instructions(t_fdf *fdf)
+{
+	static char	*help[] = {
+			"PROJECTIONS",
+			"Orthographic  -  O",
+			"Isometric  -  I",
+			"Dimetric  -  D",
+			"Trimetric  -  T",
+			"Cabinet  -  K",
+			"Cavalier  -  C"
+	};
+
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 950, 1000, 0x00FF00, help[0]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 1050, 0x00FF00, help[1]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 350, 1050, 0x00FF00, help[2]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 700, 1050, 0x00FF00, help[3]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 1050, 1050, 0x00FF00, help[4]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 1400, 1050, 0x00FF00, help[5]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 1820, 1050, 0x00FF00, help[6]);
+}
+
+
+void	rotate_instructions(t_fdf *fdf)
+{
+	static char	*help[4] = {
+			"ROTATE:",
+			"x-asix  -  7 | 9",
+			"y-asix  -  4 | 6",
+			"z-asix  -  1 | 3"
+	};
+
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 40, 0x00FF00, help[0]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 60, 0x00FF00, help[1]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 80, 0x00FF00, help[2]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 100, 0x00FF00, help[3]);
+}
+
+void	scale_instructions(t_fdf *fdf)
+{
+	static char	*help[3] = {
+			"SCALE:",
+			"Zoom in  |  +",
+			"Zoom out |  -"
+	};
+
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 1800, 400, 0x00FF00, help[0]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 1800, 420, 0x00FF00, help[1]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 1800, 440, 0x00FF00, help[2]);
+}
+
+void	exit_instructions(t_fdf *fdf)
+{
+	static char	*help[] = {
+			"EXIT:",
+			"Key  ESC"
+	};
+
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 1800, 700, 0x00FF00, help[0]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 1800, 720, 0x00FF00, help[1]);
+}
+
+void	translate_instructions(t_fdf *fdf)
+{
+	static char	*help[3] = {
+			"TRANSLATE:",
+			"Key  LEFT | RIGHT",
+			"Key   UP  | DOWN",
+	};
+
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 1800, 40, 0x00FF00, help[0]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 1800, 60, 0x00FF00, help[1]);
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 1800, 80, 0x00FF00, help[2]);
+}
+
 void	get_help(t_fdf *fdf)
 {
-	static char	*help =
-			"ROTATE:\n"
-   "x-asix  -  7 | 9\n"
-   "y-asix  -  4 | 6\n"
-   "x-asix  -  1 | 3\n";
-
-	
-	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 20, 0x00FF00, help);
+	rotate_instructions(fdf);
+	translate_instructions(fdf);
+	fps_instructions(fdf);
+	scale_instructions(fdf);
+	projection_instructions(fdf);
+	color_instructions(fdf);
+	exit_instructions(fdf);
 }
 
 void	do_operations(t_fdf *fdf)
@@ -218,61 +315,44 @@ void	init_help(t_fdf *fdf)
 		fdf->help.frame[i] = (int*)(fdf->help.img + (fdf->help.size_line * i));
 
 	t_point rainbow[8];
+	ft_bzero(rainbow, sizeof(rainbow));
 
 	rainbow[0].x = 0;
-	rainbow[0].y = 0;
 	rainbow[0].color = 0x00ff0000;
-
 	rainbow[1].x = 285;
-	rainbow[1].y = 0;
 	rainbow[1].color = 0x00ffdd00;
-
 	rainbow[2].x = 570;
-	rainbow[2].y = 0;
 	rainbow[2].color = 0x0021ff00;
-
 	rainbow[3].x = 855;
-	rainbow[3].y = 0;
 	rainbow[3].color = 0x0000fffa;
-
 	rainbow[4].x = 1140;
-	rainbow[4].y = 0;
 	rainbow[4].color = 0x00000cff;
-
 	rainbow[5].x = 1425;
-	rainbow[5].y = 0;
 	rainbow[5].color = 0x00c300ff;
-
 	rainbow[6].x = 1710;
-	rainbow[6].y = 0;
 	rainbow[6].color = 0x00c300ff;
-
 	rainbow[7].x = 1999;
-	rainbow[7].y = 0;
 	rainbow[7].color = 0x00ff0000;
-
-
-
 
 	int y = -1;
 	while (++y < fdf->w_size.y)
 	{
-		draw_gradient_line_h(rainbow[0], rainbow[1], fdf, rainbow[0]);
-		draw_gradient_line_h(rainbow[1], rainbow[2], fdf, rainbow[0]);
-		draw_gradient_line_h(rainbow[2], rainbow[3], fdf, rainbow[0]);
-		draw_gradient_line_h(rainbow[3], rainbow[4], fdf, rainbow[0]);
-		draw_gradient_line_h(rainbow[4], rainbow[5], fdf, rainbow[0]);
-		draw_gradient_line_h(rainbow[5], rainbow[6], fdf, rainbow[0]);
-		draw_gradient_line_h(rainbow[6], rainbow[7], fdf, rainbow[0]);
+		i = -1;
+		while (++i < 7)
+		{
+			draw_gradient_line_h(rainbow[i], rainbow[i + 1], fdf, rainbow[0]);
+			rainbow[i].y++;
+		}
+		rainbow[i].y++;
 
-		rainbow[0].y++;
-		rainbow[1].y++;
-		rainbow[2].y++;
-		rainbow[3].y++;
-		rainbow[4].y++;
-		rainbow[5].y++;
-		rainbow[6].y++;
-		rainbow[7].y++;
+//		rainbow[0].y++;
+//		rainbow[1].y++;
+//		rainbow[2].y++;
+//		rainbow[3].y++;
+//		rainbow[4].y++;
+//		rainbow[5].y++;
+//		rainbow[6].y++;
+//		rainbow[7].y++;
 	}
 }
 
@@ -325,6 +405,9 @@ int main(int argc, char **argv)
 	if (argc != 2)
 		ft_error("usage:  ./fdf [filename]\n");
 	first_init(argv[1], &fdf);
+
+	do_operations(&fdf);
+
 	mlx_hook(fdf.win_ptr, 2, 0, key_hook, &fdf);
 	mlx_hook(fdf.win_ptr, 17, 0, close_fdf, &fdf);
 

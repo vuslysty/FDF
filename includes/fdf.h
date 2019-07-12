@@ -39,6 +39,10 @@ typedef struct			s_point
 	int 				color;
 }						t_point;
 
+/*
+** d - diagonal for draw line algorithm
+*/
+
 typedef struct			s_mthread
 {
 	int 				d;
